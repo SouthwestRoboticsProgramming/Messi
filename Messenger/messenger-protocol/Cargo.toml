@@ -1,5 +1,5 @@
 [package]
-name = "messenger-server"
+name = "messenger-protocol"
 version = "0.1.0"
 edition = "2021"
 
@@ -7,7 +7,4 @@ edition = "2021"
 
 [dependencies]
 bytes = "1.4.0"
-futures-util = "0.3.28"
-messenger-protocol = { version = "0.1.0", path = "../messenger-protocol" }
-tokio = { version = "1.29.1", features = ["rt-multi-thread", "io-util", "net", "macros", "time"] }
 tokio-util = {version = "0.7.8", features = ["codec"] }
