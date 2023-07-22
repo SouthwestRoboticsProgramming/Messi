@@ -2,4 +2,5 @@
 members = [
     "messenger-server",
     "messenger-protocol",
+    "messenger-client",
 ]
