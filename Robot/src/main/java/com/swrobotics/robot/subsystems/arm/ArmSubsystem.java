@@ -10,6 +10,8 @@ import com.swrobotics.robot.config.CANAllocation;
 import com.swrobotics.robot.subsystems.intake.GamePiece;
 import com.swrobotics.robot.subsystems.intake.IntakeSubsystem;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
@@ -35,7 +37,7 @@ public final class ArmSubsystem extends SwitchableSubsystemBase {
     private final ArmJoint bottom, top;
     private final WristJoint wrist;
     private final ArmPathfinder pathfinder;
-    private final PIDController movePid;
+    private final ProfiledPIDController movePid;
     private ArmPose targetPose;
     private boolean inToleranceHysteresis;
     private NTEntry<Angle> wristFold;
@@ -66,7 +68,7 @@ public final class ArmSubsystem extends SwitchableSubsystemBase {
         wrist.calibratePosition(home.wristAngle.sub(home.topAngle));
 
         pathfinder = new ArmPathfinder(msg);
-        movePid = NTUtil.tunablePID(ARM_MOVE_KP, ARM_MOVE_KI, ARM_MOVE_KD);
+        movePid = NTUtil.tunableProfiledPID(ARM_MOVE_KP, ARM_MOVE_KI, ARM_MOVE_KD, new TrapezoidProfile.Constraints(1, 1));
         targetPose = home;
 
         ARM_BRAKE_MODE.nowAndOnChange((brake) -> {
@@ -176,7 +178,7 @@ public final class ArmSubsystem extends SwitchableSubsystemBase {
         // If we just started moving, we need to reset the PID in case there
         // is any nonzero value in the integral accumulator
         if (prevInTolerance && !inToleranceHysteresis)
-            movePid.reset();
+            movePid.reset(Math.sqrt(magSqToFinalTarget));
 
         if (inToleranceHysteresis) {
             // Already at target, we don't need to move
