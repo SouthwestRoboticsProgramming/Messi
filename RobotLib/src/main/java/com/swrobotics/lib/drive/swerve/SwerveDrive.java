@@ -75,8 +75,14 @@ public class SwerveDrive extends Drivetrain {
                         twistVel.dy / periodicTime,
                         twistVel.dtheta / periodicTime);
 
+        // Find the fastest velocity all modules can achieve
+        double minMaxVel = Double.POSITIVE_INFINITY;
+        for (SwerveModule module : modules) {
+            minMaxVel = Math.min(minMaxVel, module.getMaxVelocity());
+        }
+
         SwerveModuleState[] states = kinematics.toSwerveModuleStates(speeds);
-        SwerveDriveKinematics.desaturateWheelSpeeds(states, modules[0].getMaxVelocity());
+        SwerveDriveKinematics.desaturateWheelSpeeds(states, minMaxVel);
 
         double vx = speeds.vxMetersPerSecond;
         double vy = speeds.vyMetersPerSecond;
