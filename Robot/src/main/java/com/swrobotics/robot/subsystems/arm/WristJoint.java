@@ -8,8 +8,8 @@ import com.swrobotics.robot.config.NTData;
 import org.littletonrobotics.junction.Logger;
 
 public final class WristJoint extends ArmJoint {
-    private final CWAngle MAX_ACCEL = CWAngle.rot(1); // RPS per second
-    private final CWAngle MAX_VELOCITY = CWAngle.rot(1); // Rotations per second
+    private final CWAngle MAX_ACCEL = CWAngle.rot(1500 / 60 *2); // RPS per second
+    private final CWAngle MAX_VELOCITY = CWAngle.rot(2000 / 60 * 2); // Rotations per second
 
     public WristJoint(int motorId, int canCoderId, double canCoderToArmRatio, double motorToArmRatio, NTEntry<Angle> absEncoderOffset, boolean invert) {
         super(motorId, canCoderId, canCoderToArmRatio, motorToArmRatio, absEncoderOffset, invert);
