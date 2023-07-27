@@ -25,7 +25,7 @@ public final class NTData {
     public static final NTEntry<Angle> SWERVE_OFFSET_BL = new NTAngle("Swerve/Modules/Back Left/Offset Degrees", 389.267578, NTAngle.Mode.CCW_DEG).setPersistent();
     public static final NTEntry<Angle> SWERVE_OFFSET_BR = new NTAngle("Swerve/Modules/Back Right/Offset Degrees", -16.787109, NTAngle.Mode.CCW_DEG).setPersistent();
 
-    public static final NTEntry<Double> ARM_MOVE_KP = new NTDouble("Arm/Move PID/kP", 0.3).setPersistent();
+    public static final NTEntry<Double> ARM_MOVE_KP = new NTDouble("Arm/Move PID/kP", 0.02).setPersistent();
     public static final NTEntry<Double> ARM_MOVE_KI = new NTDouble("Arm/Move PID/kI", 0).setPersistent();
     public static final NTEntry<Double> ARM_MOVE_KD = new NTDouble("Arm/Move PID/kD", 0).setPersistent();
     public static final NTEntry<Double> ARM_WRIST_KP = new NTDouble("Arm/Wrist PID/kP", 0.1).setPersistent();
@@ -33,7 +33,7 @@ public final class NTData {
     public static final NTEntry<Double> ARM_WRIST_KD = new NTDouble("Arm/Wrist PID/kD", 0).setPersistent();
 
     // Velocity is in motor rotations per second, accel in motor rotations per second per second
-    public static final NTEntry<Double> ARM_MAX_VELOCITY = new NTDouble("Arm/Profile/Max Velocity", 40).setPersistent();
+    public static final NTEntry<Double> ARM_MAX_VELOCITY = new NTDouble("Arm/Profile/Max Velocity", 100).setPersistent();
     public static final NTEntry<Double> ARM_MAX_ACCEL = new NTDouble("Arm/Profile/Max Acceleration", 200).setPersistent();
     public static final NTEntry<Double> ARM_STOP_TOL = new NTDouble("Arm/Stop Tolerance", 1.5).setPersistent();
     public static final NTEntry<Double> ARM_START_TOL = new NTDouble("Arm/Start Tolerance", 2.5).setPersistent();
