@@ -124,4 +124,8 @@ public final class MathUtil {
     public static double square(double in) {
         return in * in;
     }
+
+    public static boolean fuzzyEquals(double a, double b) {
+	return Math.abs(a - b) <= EPSILON;
+    }
 }
