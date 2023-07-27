@@ -15,6 +15,7 @@ import java.util.function.Supplier;
 // FIXME: Do a proper simulation and fully implement
 //        This is currently assuming no motor load with no inertia
 public final class SimMotor extends SubsystemBase implements FeedbackMotor {
+    // TODO: Refactor this outside of SimMotor since actual robot code may want it
     public static final class MotorCaps {
         public final Angle freeSpeed;
         public final double sensorUnitsPerRot;

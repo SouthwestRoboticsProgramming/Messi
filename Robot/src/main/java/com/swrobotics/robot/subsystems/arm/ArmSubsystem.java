@@ -9,7 +9,8 @@ import com.swrobotics.messenger.client.MessengerClient;
 import com.swrobotics.robot.config.CANAllocation;
 import com.swrobotics.robot.subsystems.intake.GamePiece;
 import com.swrobotics.robot.subsystems.intake.IntakeSubsystem;
-import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
@@ -35,11 +36,13 @@ public final class ArmSubsystem extends SwitchableSubsystemBase {
     private final ArmJoint bottom, top;
     private final WristJoint wrist;
     private final ArmPathfinder pathfinder;
-    private final PIDController movePid;
+    private final ProfiledPIDController movePid;
     private ArmPose targetPose;
     private boolean inToleranceHysteresis;
     private NTEntry<Angle> wristFold;
     private boolean folded, prevEnterFold, prevExitFold;
+    private Vec2d prevBiasedStart;
+    private boolean needResetPID;
 
     private final ArmVisualizer currentVisualizer, stepTargetVisualizer, targetVisualizer;
 
@@ -52,9 +55,9 @@ public final class ArmSubsystem extends SwitchableSubsystemBase {
 
         double size = (BOTTOM_LENGTH + TOP_LENGTH + WRIST_RAD) * 2;
         Mechanism2d visualizer = new Mechanism2d(size, size);
-        targetVisualizer = new ArmVisualizer(size/2, size/2, visualizer, "Target", Color.kDarkRed, Color.kRed, Color.kOrangeRed);
-        stepTargetVisualizer = new ArmVisualizer(size/2, size/2, visualizer, "Step Target", Color.kDarkOrange, Color.kOrange, Color.kDarkGoldenrod);
-        currentVisualizer = new ArmVisualizer(size/2, size/2, visualizer, "Current", Color.kDarkGreen, Color.kGreen, Color.kLightGreen);
+        targetVisualizer = new ArmVisualizer(size / 2, size / 2, visualizer, "Target", Color.kDarkRed, Color.kRed, Color.kOrangeRed);
+        stepTargetVisualizer = new ArmVisualizer(size / 2, size / 2, visualizer, "Step Target", Color.kDarkOrange, Color.kOrange, Color.kDarkGoldenrod);
+        currentVisualizer = new ArmVisualizer(size / 2, size / 2, visualizer, "Current", Color.kDarkGreen, Color.kGreen, Color.kLightGreen);
         SmartDashboard.putData("Arm Visualizer", visualizer);
 
         ArmPose home = ArmPositions.DEFAULT.get().toPose();
@@ -66,8 +69,18 @@ public final class ArmSubsystem extends SwitchableSubsystemBase {
         wrist.calibratePosition(home.wristAngle.sub(home.topAngle));
 
         pathfinder = new ArmPathfinder(msg);
-        movePid = NTUtil.tunablePID(ARM_MOVE_KP, ARM_MOVE_KI, ARM_MOVE_KD);
+        movePid = new ProfiledPIDController(ARM_MOVE_KP.get(), ARM_MOVE_KI.get(), ARM_MOVE_KD.get(),
+                new TrapezoidProfile.Constraints(ARM_MAX_VELOCITY.get(), ARM_MAX_ACCEL.get()));
+        ARM_MOVE_KP.onChange(movePid::setP);
+        ARM_MOVE_KI.onChange(movePid::setI);
+        ARM_MOVE_KD.onChange(movePid::setD);
+        ARM_MAX_VELOCITY.onChange((vel) -> movePid.setConstraints(new TrapezoidProfile.Constraints(vel, ARM_MAX_ACCEL.get())));
+        ARM_MAX_ACCEL.onChange((acc) -> movePid.setConstraints(new TrapezoidProfile.Constraints(ARM_MAX_VELOCITY.get(), acc)));
         targetPose = home;
+
+        inToleranceHysteresis = false;
+        prevBiasedStart = new Vec2d(0, 0); // Should not be accessed until first target set, so this value doesn't matter
+        needResetPID = false;
 
         ARM_BRAKE_MODE.nowAndOnChange((brake) -> {
             bottom.setBrakeMode(brake);
@@ -159,58 +172,56 @@ public final class ArmSubsystem extends SwitchableSubsystemBase {
                 .sub(currentPose.bottomAngle.ccw().rad(), currentPose.topAngle.ccw().rad());
 
         // Tolerance hysteresis so the motor doesn't do the shaky shaky
-        double magSqToFinalTarget = new Vec2d(biasedTarget).sub(biasedStart).magnitudeSq();
-        boolean prevInTolerance = inToleranceHysteresis;
+        double magToFinalTarget = new Vec2d(biasedTarget).sub(biasedStart).magnitude();
 
         // If within stop tolerance, stop moving
         // If outside start tolerance, start moving
         // Otherwise, continue doing what we were doing the previous periodic
         double startTol = ARM_START_TOL.get();
         double stopTol = ARM_STOP_TOL.get();
-        if (magSqToFinalTarget > startTol * startTol) {
+        if (magToFinalTarget > startTol) {
             inToleranceHysteresis = false;
-        } else if (magSqToFinalTarget < stopTol * stopTol) {
+        } else if (magToFinalTarget < stopTol) {
             inToleranceHysteresis = true;
         }
 
         // If we just started moving, we need to reset the PID in case there
         // is any nonzero value in the integral accumulator
-        if (prevInTolerance && !inToleranceHysteresis)
-            movePid.reset();
+        if (needResetPID) {
+            // Calculate last periodic's magnitude using new target
+            double prevMag = new Vec2d(biasedTarget).sub(prevBiasedStart).magnitude();
 
-        if (inToleranceHysteresis) {
-            // Already at target, we don't need to move
-            onDisable();
-        } else {
-            // Negated since PID is calculating from the current distance
-            // towards 0, so negative PID output corresponds to movement
-            // towards the target.
-            // Magnitude to final target is used so movement only slows down
-            // upon reaching the final target, not at each intermediate position
-            double pidOut = -movePid.calculate(Math.sqrt(magSqToFinalTarget), 0);
-            pidOut = MathUtil.clamp(pidOut, 0, ARM_MAX_SPEED_BOTTOM.get()); // Remove any negative control
+            // Estimate the current velocity of the arm with relation to the new target
+            double estVel = (prevMag - magToFinalTarget) / 0.02;
 
-            // Apply bias to towardsTarget so that each axis takes equal time
-            // This allows the assumption in the pathfinder that moving towards
-            // a target travels in a straight line in state space
-            towardsTarget.mul(ArmConstants.BOTTOM_GEAR_RATIO, ArmConstants.TOP_GEAR_RATIO)
-                    .boxNormalize()
-                    .mul(pidOut);
-
-//            // Limit speeds
-//            double scaleX = Math.min(1, ARM_MAX_SPEED_BOTTOM.get() / towardsTarget.x);
-//            double scaleY = Math.min(1, ARM_MAX_SPEED_TOP.get() / towardsTarget.y);
-//            double scale = Math.min(scaleX, scaleY);
-//            towardsTarget.mul(scale);
-
-            if (Double.isNaN(towardsTarget.x) || Double.isNaN(towardsTarget.y)) {
-                throw new RuntimeException("Towards target vector is NaN somehow");
-            }
-
-            // Set motor outputs to move towards the current target
-            bottom.setMotorOutput(towardsTarget.x);
-            top.setMotorOutput(towardsTarget.y);
+            movePid.reset(-magToFinalTarget, estVel);
+            needResetPID = false;
         }
+        prevBiasedStart = biasedStart;
+
+        // Magnitude to final target is used so movement only slows down
+        // upon reaching the final target, not at each intermediate position
+
+        // Magnitude is in motor rotations due to bias
+        double pidOut = movePid.calculate(-magToFinalTarget, 0);
+
+        Logger.getInstance().recordOutput("Arm/PID/Mag to final target", magToFinalTarget);
+        Logger.getInstance().recordOutput("Arm/PID/PID output", pidOut);
+
+        // Apply bias to towardsTarget so that each axis takes equal time
+        // This allows the assumption in the pathfinder that moving towards
+        // a target travels in a straight line in state space
+        towardsTarget.mul(ArmConstants.BOTTOM_GEAR_RATIO, ArmConstants.TOP_GEAR_RATIO)
+                .boxNormalize()
+                .mul(pidOut);
+
+        if (Double.isNaN(towardsTarget.x) || Double.isNaN(towardsTarget.y)) {
+            throw new RuntimeException("Towards target vector is NaN somehow");
+        }
+
+        // Set motor outputs to move towards the current target
+        bottom.setMotorOutput(towardsTarget.x);
+        top.setMotorOutput(towardsTarget.y);
 
         // Always fold regardless of having a game piece, since we can't
         // reliably determine if we have one. This is fine without game
@@ -272,6 +283,11 @@ public final class ArmSubsystem extends SwitchableSubsystemBase {
         if (Double.isNaN(pose.bottomAngle.ccw().deg()) || Double.isNaN(pose.topAngle.ccw().deg()) || Double.isNaN(pose.wristAngle.ccw().deg())) {
             throw new RuntimeException("Target pose is NaN somehow");
         }
+
+        // If bottom or top joint target changed, we need to reset PID
+        needResetPID |= !MathUtil.fuzzyEquals(pose.bottomAngle.ccw().rad(), targetPose.bottomAngle.ccw().rad());
+        needResetPID |= !MathUtil.fuzzyEquals(pose.topAngle.ccw().rad(), targetPose.topAngle.ccw().rad());
+
         targetPose = pose;
     }
 
