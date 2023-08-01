@@ -1,7 +1,7 @@
 package com.swrobotics.lib.drive.swerve;
 
 import com.swrobotics.lib.encoder.Encoder;
-import com.swrobotics.lib.motor.FeedbackMotor;
+import com.swrobotics.lib.motor2.FeedbackMotor;
 import com.swrobotics.lib.net.NTEntry;
 import com.swrobotics.mathlib.Angle;
 import com.swrobotics.mathlib.CCWAngle;

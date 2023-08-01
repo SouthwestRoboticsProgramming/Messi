@@ -8,8 +8,7 @@ import com.swrobotics.lib.encoder.CanCoder;
 import com.swrobotics.lib.encoder.Encoder;
 import com.swrobotics.lib.field.FieldInfo;
 import com.swrobotics.lib.gyro.PigeonGyroscope;
-import com.swrobotics.lib.motor.FeedbackMotor;
-import com.swrobotics.lib.motor.ctre.TalonFXMotor;
+import com.swrobotics.lib.motor2.TalonMotor;
 import com.swrobotics.lib.net.NTBoolean;
 import com.swrobotics.lib.net.NTPrimitive;
 import com.swrobotics.robot.config.NTData;
@@ -34,8 +33,8 @@ public final class DrivetrainSubsystem extends SwerveDrive {
     private final StateVisualizer stateVisualizer;
 
     private static SwerveModule makeModule(SwerveModuleInfo info, Translation2d pos) {
-        FeedbackMotor driveMotor = new TalonFXMotor(info.driveMotorID);
-        FeedbackMotor turnMotor = new TalonFXMotor(info.turnMotorID);
+        TalonMotor driveMotor = TalonMotor.talonFX(info.driveMotorID);
+        TalonMotor turnMotor = TalonMotor.talonFX(info.turnMotorID);
         Encoder encoder = new CanCoder(info.encoderID).getAbsolute();
 
         // MK4i is inverted
