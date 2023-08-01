@@ -28,6 +28,13 @@ public interface SparkMaxMotor extends FeedbackMotor {
 
     // Add special functionality here
 
+    void setPositionSmartMotion(Angle position);
+    void setSmartMotionAccelStrategy(SparkMaxPIDController.AccelStrategy accelStrategy);
+    void setSmartMotionMinOutputVelocity(Angle minVel);
+    void setSmartMotionMaxVelocity(Angle maxVel);
+    void setSmartMotionMaxAccel(Angle maxAccel);
+    void setSmartMotionAllowedClosedLoopErr(Angle maxErr);
+
     final class Real implements SparkMaxMotor {
         private final CANSparkMax spark;
         private final SparkMaxPIDController pid;
@@ -121,11 +128,87 @@ public interface SparkMaxMotor extends FeedbackMotor {
         public void setBrakeMode(boolean brake) {
             spark.setIdleMode(brake ? CANSparkMax.IdleMode.kBrake : CANSparkMax.IdleMode.kCoast);
         }
+
+        @Override
+        public void setPositionSmartMotion(Angle position) {
+            pid.setReference(position.ccw().rot(), CANSparkMax.ControlType.kSmartMotion);
+        }
+
+        @Override
+        public void setSmartMotionAccelStrategy(SparkMaxPIDController.AccelStrategy accelStrategy) {
+            pid.setSmartMotionAccelStrategy(accelStrategy, 0);
+        }
+
+        @Override
+        public void setSmartMotionMinOutputVelocity(Angle minVel) {
+            pid.setSmartMotionMinOutputVelocity(Units.radiansPerSecondToRotationsPerMinute(minVel.ccw().abs().rad()), 0);
+        }
+
+        @Override
+        public void setSmartMotionMaxVelocity(Angle maxVel) {
+            pid.setSmartMotionMaxVelocity(Units.radiansPerSecondToRotationsPerMinute(maxVel.ccw().abs().rad()), 0);
+        }
+
+        @Override
+        public void setSmartMotionMaxAccel(Angle maxAccel) {
+            pid.setSmartMotionMaxAccel(Units.radiansPerSecondToRotationsPerMinute(maxAccel.ccw().abs().rad()), 0);
+        }
+
+        @Override
+        public void setSmartMotionAllowedClosedLoopErr(Angle maxErr) {
+            pid.setSmartMotionAllowedClosedLoopError(maxErr.ccw().abs().rot(), 0);
+        }
     }
 
     final class Sim extends SimFeedbackMotor implements SparkMaxMotor {
+        private final SimSmartMotionCtrl smartMotion;
+
         private Sim(MotorType type) {
             super(type, 0.001, 1, 1, 60);
+            smartMotion = new SimSmartMotionCtrl();
+        }
+
+        @Override
+        public void setPositionSmartMotion(Angle position) {
+            apply(smartMotion, position);
+        }
+
+        @Override
+        public void setSmartMotionAccelStrategy(SparkMaxPIDController.AccelStrategy accelStrategy) {
+            // TODO
+        }
+
+        @Override
+        public void setSmartMotionMinOutputVelocity(Angle minVel) {
+            // TODO
+        }
+
+        @Override
+        public void setSmartMotionMaxVelocity(Angle maxVel) {
+            // TODO
+        }
+
+        @Override
+        public void setSmartMotionMaxAccel(Angle maxAccel) {
+            // TODO
+        }
+
+        @Override
+        public void setSmartMotionAllowedClosedLoopErr(Angle maxErr) {
+            // TODO
+        }
+
+        private static final class SimSmartMotionCtrl implements SimControlMode<Angle> {
+            @Override
+            public void begin() {
+
+            }
+
+            @Override
+            public double calc(Angle demand) {
+                // TODO: Figure out how SmartMotion actually works
+                return 0;
+            }
         }
     }
 }

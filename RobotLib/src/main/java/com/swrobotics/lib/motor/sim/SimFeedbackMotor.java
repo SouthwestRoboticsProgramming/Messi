@@ -8,7 +8,7 @@ import com.swrobotics.mathlib.Angle;
 
 public class SimFeedbackMotor extends SimMotor implements FeedbackMotor {
     protected final SimEncoder encoder;
-    private final SimPIDController pid;
+    protected final SimPIDController pid;
     private final SimPositionPIDCtrl positionCtrl;
     private final SimVelocityPIDCtrl velocityCtrl;
 
