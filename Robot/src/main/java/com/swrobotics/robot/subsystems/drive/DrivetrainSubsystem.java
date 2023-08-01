@@ -8,7 +8,7 @@ import com.swrobotics.lib.encoder.CanCoder;
 import com.swrobotics.lib.encoder.Encoder;
 import com.swrobotics.lib.field.FieldInfo;
 import com.swrobotics.lib.gyro.PigeonGyroscope;
-import com.swrobotics.lib.motor2.TalonMotor;
+import com.swrobotics.lib.motor.TalonMotor;
 import com.swrobotics.lib.net.NTBoolean;
 import com.swrobotics.lib.net.NTPrimitive;
 import com.swrobotics.robot.config.NTData;

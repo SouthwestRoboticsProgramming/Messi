@@ -1,8 +1,8 @@
 package com.swrobotics.robot.subsystems.intake;
 
-import com.swrobotics.lib.motor2.Motor;
-import com.swrobotics.lib.motor2.MotorType;
-import com.swrobotics.lib.motor2.SparkMaxMotor;
+import com.swrobotics.lib.motor.Motor;
+import com.swrobotics.lib.motor.MotorType;
+import com.swrobotics.lib.motor.SparkMaxMotor;
 import com.swrobotics.lib.schedule.SwitchableSubsystemBase;
 import com.swrobotics.robot.config.CANAllocation;
 import org.littletonrobotics.junction.Logger;

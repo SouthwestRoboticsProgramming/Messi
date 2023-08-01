@@ -1,4 +1,4 @@
-package com.swrobotics.lib.motor2;
+package com.swrobotics.lib.motor;
 
 import com.swrobotics.mathlib.Angle;
 import com.swrobotics.mathlib.CCWAngle;

@@ -1,4 +1,4 @@
-package com.swrobotics.lib.motor2;
+package com.swrobotics.lib.motor;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
@@ -8,7 +8,7 @@ import com.ctre.phoenix.motorcontrol.can.BaseTalon;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.swrobotics.lib.encoder.Encoder;
-import com.swrobotics.lib.motor2.sim.SimFeedbackMotor;
+import com.swrobotics.lib.motor.sim.SimFeedbackMotor;
 import com.swrobotics.mathlib.Angle;
 import com.swrobotics.mathlib.CCWAngle;
 import edu.wpi.first.wpilibj.RobotBase;

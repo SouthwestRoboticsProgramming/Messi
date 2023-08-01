@@ -1,4 +1,4 @@
-package com.swrobotics.lib.motor2.sim;
+package com.swrobotics.lib.motor.sim;
 
 import com.swrobotics.lib.encoder.SimEncoder;
 import com.swrobotics.mathlib.Angle;

@@ -1,6 +1,6 @@
 package com.swrobotics.robot.subsystems.arm;
 
-import com.swrobotics.lib.motor2.MotorType;
+import com.swrobotics.lib.motor.MotorType;
 import com.swrobotics.lib.net.*;
 import com.swrobotics.lib.schedule.SwitchableSubsystemBase;
 import com.swrobotics.mathlib.Angle;

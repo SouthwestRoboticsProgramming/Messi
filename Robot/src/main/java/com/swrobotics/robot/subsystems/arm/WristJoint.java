@@ -1,6 +1,6 @@
 package com.swrobotics.robot.subsystems.arm;
 
-import com.swrobotics.lib.motor2.MotorType;
+import com.swrobotics.lib.motor.MotorType;
 import com.swrobotics.lib.net.NTEntry;
 import com.swrobotics.mathlib.Angle;
 import com.swrobotics.robot.config.NTData;

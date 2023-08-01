@@ -1,4 +1,4 @@
-package com.swrobotics.lib.motor2.sim;
+package com.swrobotics.lib.motor.sim;
 
 public final class SimPercentOutCtrl implements SimControlMode<Double> {
     @Override

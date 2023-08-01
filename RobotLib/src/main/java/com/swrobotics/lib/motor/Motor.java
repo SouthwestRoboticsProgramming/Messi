@@ -1,4 +1,4 @@
-package com.swrobotics.lib.motor2;
+package com.swrobotics.lib.motor;
 
 /**
  * Abstraction for a motor. This contains the basic functionality

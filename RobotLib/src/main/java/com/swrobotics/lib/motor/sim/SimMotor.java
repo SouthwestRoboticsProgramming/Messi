@@ -1,8 +1,7 @@
-package com.swrobotics.lib.motor2.sim;
+package com.swrobotics.lib.motor.sim;
 
-import com.swrobotics.lib.encoder.SimEncoder;
-import com.swrobotics.lib.motor2.Motor;
-import com.swrobotics.lib.motor2.MotorType;
+import com.swrobotics.lib.motor.Motor;
+import com.swrobotics.lib.motor.MotorType;
 import com.swrobotics.mathlib.Angle;
 import com.swrobotics.mathlib.MathUtil;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;

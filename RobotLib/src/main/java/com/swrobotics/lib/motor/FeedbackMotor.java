@@ -1,4 +1,4 @@
-package com.swrobotics.lib.motor2;
+package com.swrobotics.lib.motor;
 
 import com.swrobotics.lib.encoder.Encoder;
 import com.swrobotics.lib.net.NTEntry;

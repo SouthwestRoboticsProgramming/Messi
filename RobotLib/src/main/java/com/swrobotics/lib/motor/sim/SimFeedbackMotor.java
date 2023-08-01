@@ -1,9 +1,9 @@
-package com.swrobotics.lib.motor2.sim;
+package com.swrobotics.lib.motor.sim;
 
 import com.swrobotics.lib.encoder.Encoder;
 import com.swrobotics.lib.encoder.SimEncoder;
-import com.swrobotics.lib.motor2.FeedbackMotor;
-import com.swrobotics.lib.motor2.MotorType;
+import com.swrobotics.lib.motor.FeedbackMotor;
+import com.swrobotics.lib.motor.MotorType;
 import com.swrobotics.mathlib.Angle;
 
 public class SimFeedbackMotor extends SimMotor implements FeedbackMotor {
