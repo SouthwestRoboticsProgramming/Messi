@@ -6,6 +6,7 @@ import com.swrobotics.lib.drive.swerve.SwerveModule;
 import com.swrobotics.lib.drive.swerve.SwerveModuleAttributes;
 import com.swrobotics.lib.encoder.CanCoder;
 import com.swrobotics.lib.encoder.Encoder;
+import com.swrobotics.lib.encoder.SimEncoder;
 import com.swrobotics.lib.field.FieldInfo;
 import com.swrobotics.lib.gyro.PigeonGyroscope;
 import com.swrobotics.lib.motor.TalonMotor;
@@ -16,6 +17,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.*;
 import org.littletonrobotics.junction.Logger;
 
@@ -33,9 +35,16 @@ public final class DrivetrainSubsystem extends SwerveDrive {
     private final StateVisualizer stateVisualizer;
 
     private static SwerveModule makeModule(SwerveModuleInfo info, Translation2d pos) {
+        SwerveModuleAttributes attribs = SwerveModuleAttributes.SDS_MK4I_L3;
+
         TalonMotor driveMotor = TalonMotor.talonFX(info.driveMotorID);
         TalonMotor turnMotor = TalonMotor.talonFX(info.turnMotorID);
-        Encoder encoder = new CanCoder(info.encoderID).getAbsolute();
+        Encoder encoder;
+        if (RobotBase.isReal()) {
+            encoder = new CanCoder(info.encoderID).getAbsolute();
+        } else {
+            encoder = new SimEncoder(() -> ((SimEncoder) turnMotor.getIntegratedEncoder()).getRawAngle().div(attribs.getTurnGearRatio()).add(info.offset.get()));
+        }
 
         // MK4i is inverted
         driveMotor.setInverted(true);
@@ -44,7 +53,7 @@ public final class DrivetrainSubsystem extends SwerveDrive {
         turnMotor.setPID(NTData.SWERVE_TURN_KP, NTData.SWERVE_TURN_KI, NTData.SWERVE_TURN_KD);
 
         return new SwerveModule(
-                SwerveModuleAttributes.SDS_MK4I_L3, driveMotor, turnMotor, encoder, pos, info.offset);
+                attribs, driveMotor, turnMotor, encoder, pos, info.offset);
     }
 
     public DrivetrainSubsystem(PigeonGyroscope gyro) {
