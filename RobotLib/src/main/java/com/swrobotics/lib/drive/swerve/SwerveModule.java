@@ -31,9 +31,6 @@ public class SwerveModule {
     /** The state the module is currently set to constantly try to reach */
     private SwerveModuleState targetState = new SwerveModuleState();
 
-    // Simulate drive encoder distance
-    private double simulatedDistance = 0.0;
-
     /**
      * Creates a new swerve module with the given parameters. The motors provided should be
      * configured such that: - Turn motor PID is tuned for turning - Counterclockwise turn motor
@@ -100,12 +97,8 @@ public class SwerveModule {
                 optimize(state.speedMetersPerSecond, state.angle.getRadians());
         targetState = outputState;
 
-        // Simulate encoder distance for odometry
-        simulatedDistance += outputState.speedMetersPerSecond * 0.02;
-
         Angle turnUnits = toNativeTurnUnits(outputState.angle);
         turn.setPosition(turnUnits);
-//        turn.setPosition(CWAngle.rot((System.currentTimeMillis() % 1000) / 1000.0 * attribs.getTurnGearRatio()));
 
         double driveOutput = outputState.speedMetersPerSecond / attribs.getMaxVelocity();
         drive.setPercentOut(driveOutput);
@@ -151,9 +144,9 @@ public class SwerveModule {
      * @return current angle
      */
     public Rotation2d getAngle() {
-        if (RobotBase.isSimulation()) {
-            return targetState.angle;
-        }
+//        if (RobotBase.isSimulation()) {
+//            return targetState.angle;
+//        }
 
         return fromNativeTurnUnits(turnEncoder.getAngle());
     }
@@ -164,9 +157,6 @@ public class SwerveModule {
      * @return measured travel distance
      */
     public double getDistance() {
-        if (RobotBase.isSimulation()) {
-            return simulatedDistance;
-        }
         return fromNativeDriveUnits(driveEncoder.getAngle());
     }
 

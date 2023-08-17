@@ -1,5 +1,6 @@
 package com.swrobotics.robot.subsystems.arm;
 
+import com.swrobotics.lib.motor.MotorType;
 import com.swrobotics.lib.net.*;
 import com.swrobotics.lib.schedule.SwitchableSubsystemBase;
 import com.swrobotics.mathlib.Angle;
@@ -49,9 +50,9 @@ public final class ArmSubsystem extends SwitchableSubsystemBase {
     public ArmSubsystem(MessengerClient msg, IntakeSubsystem intake) {
         this.intake = intake;
 
-        bottom = new ArmJoint(CANAllocation.ARM_BOTTOM_MOTOR, CANAllocation.ARM_BOTTOM_CANCODER, CANCODER_TO_ARM_RATIO, BOTTOM_GEAR_RATIO, ARM_BOTTOM_OFFSET, true);
-        top = new ArmJoint(CANAllocation.ARM_TOP_MOTOR, CANAllocation.ARM_TOP_CANCODER, CANCODER_TO_ARM_RATIO, TOP_GEAR_RATIO, ARM_TOP_OFFSET, false);
-        wrist = new WristJoint(CANAllocation.ARM_WRIST_MOTOR, CANAllocation.ARM_WRIST_CANCODER, WRIST_CANCODER_TO_ARM_RATIO, WRIST_GEAR_RATIO, ARM_WRIST_OFFSET, false);
+        bottom = new ArmJoint(CANAllocation.ARM_BOTTOM_MOTOR, MotorType.NEO, CANAllocation.ARM_BOTTOM_CANCODER, CANCODER_TO_ARM_RATIO, BOTTOM_GEAR_RATIO, ARM_BOTTOM_OFFSET, true);
+        top = new ArmJoint(CANAllocation.ARM_TOP_MOTOR, MotorType.NEO, CANAllocation.ARM_TOP_CANCODER, CANCODER_TO_ARM_RATIO, TOP_GEAR_RATIO, ARM_TOP_OFFSET, false);
+        wrist = new WristJoint(CANAllocation.ARM_WRIST_MOTOR, MotorType.NEO_550, CANAllocation.ARM_WRIST_CANCODER, WRIST_CANCODER_TO_ARM_RATIO, WRIST_GEAR_RATIO, ARM_WRIST_OFFSET, false);
 
         double size = (BOTTOM_LENGTH + TOP_LENGTH + WRIST_RAD) * 2;
         Mechanism2d visualizer = new Mechanism2d(size, size);

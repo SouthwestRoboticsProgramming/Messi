@@ -1,13 +1,14 @@
 package com.swrobotics.robot.subsystems.arm;
 
+import com.swrobotics.lib.motor.MotorType;
 import com.swrobotics.lib.net.NTEntry;
 import com.swrobotics.mathlib.Angle;
 import com.swrobotics.robot.config.NTData;
 import org.littletonrobotics.junction.Logger;
 
 public final class WristJoint extends ArmJoint {
-    public WristJoint(int motorId, int canCoderId, double canCoderToArmRatio, double motorToArmRatio, NTEntry<Angle> absEncoderOffset, boolean invert) {
-        super(motorId, canCoderId, canCoderToArmRatio, motorToArmRatio, absEncoderOffset, invert);
+    public WristJoint(int motorId, MotorType motorType, int canCoderId, double canCoderToArmRatio, double motorToArmRatio, NTEntry<Angle> absEncoderOffset, boolean invert) {
+        super(motorId, motorType, canCoderId, canCoderToArmRatio, motorToArmRatio, absEncoderOffset, invert);
         motor.setPID(NTData.ARM_WRIST_KP, NTData.ARM_WRIST_KI, NTData.ARM_WRIST_KD);
     }
 

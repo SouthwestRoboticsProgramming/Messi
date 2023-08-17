@@ -3,18 +3,16 @@ package com.swrobotics.robot.subsystems.arm;
 import com.swrobotics.lib.encoder.CanCoder;
 import com.swrobotics.lib.encoder.Encoder;
 import com.swrobotics.lib.encoder.SimEncoder;
-import com.swrobotics.lib.motor.FeedbackMotor;
-import com.swrobotics.lib.motor.SimMotor;
-import com.swrobotics.lib.motor.rev.NEOMotor;
+import com.swrobotics.lib.motor.MotorType;
+import com.swrobotics.lib.motor.SparkMaxMotor;
 import com.swrobotics.lib.net.NTEntry;
-import com.swrobotics.lib.net.NTPrimitive;
 import com.swrobotics.mathlib.Angle;
 import edu.wpi.first.wpilibj.RobotBase;
 
 // Note: "Horizontal" as a reference point here refers to true horizontal for
 //       the two segments and facing forward parallel to the top segment for the wrist
 public class ArmJoint {
-    protected final FeedbackMotor motor;
+    protected final SparkMaxMotor motor;
     protected final Encoder motorEncoder;
     private final Encoder absoluteEncoder;
 
@@ -33,14 +31,12 @@ public class ArmJoint {
      * @param invert whether to invert output. This should be true if a ccw rotation of the
      *               motor output shaft corresponds to cw rotation of the arm
      */
-    public ArmJoint(int motorId, int canCoderId, double canCoderToArmRatio, double motorToArmRatio, NTEntry<Angle> absEncoderOffset, boolean invert) {
+    public ArmJoint(int motorId, MotorType motorType, int canCoderId, double canCoderToArmRatio, double motorToArmRatio, NTEntry<Angle> absEncoderOffset, boolean invert) {
+        motor = SparkMaxMotor.neo(motorId, motorType);
+        motorEncoder = motor.getIntegratedEncoder();
         if (RobotBase.isReal()) {
-            motor = new NEOMotor(motorId);
-            motorEncoder = motor.getIntegratedEncoder();
             absoluteEncoder = new CanCoder(canCoderId).getAbsolute();
         } else {
-            motor = new SimMotor(SimMotor.NEO);
-            motorEncoder = motor.getIntegratedEncoder();
             absoluteEncoder = new SimEncoder(() ->
                     ((SimEncoder) motorEncoder).getRawAngle().mul(canCoderToArmRatio / motorToArmRatio)
             );
