@@ -73,7 +73,11 @@ public interface FeedbackMotor extends Motor {
         setF(kF);
     }
 
-    default void setPIDF(NTPrimitive<Double> kP, NTPrimitive<Double> kI, NTPrimitive<Double> kD, NTPrimitive<Double> kF) {
+    default void setPIDF(
+            NTPrimitive<Double> kP,
+            NTPrimitive<Double> kI,
+            NTPrimitive<Double> kD,
+            NTPrimitive<Double> kF) {
         setPID(kP, kI, kD);
         kF.nowAndOnChange(this::setF);
     }

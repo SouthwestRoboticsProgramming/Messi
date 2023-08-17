@@ -23,7 +23,6 @@ public final class SimPositionPIDCtrl implements SimControlMode<Angle> {
     public double calc(Angle demand) {
         return pid.calc(
                 encoder.getAngle().ccw().rot() * sensorUnitsPerRot,
-                demand.ccw().rot() * sensorUnitsPerRot
-        );
+                demand.ccw().rot() * sensorUnitsPerRot);
     }
 }

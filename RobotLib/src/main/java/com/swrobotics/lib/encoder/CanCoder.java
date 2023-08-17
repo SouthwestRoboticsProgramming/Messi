@@ -3,7 +3,6 @@ package com.swrobotics.lib.encoder;
 import com.ctre.phoenix.sensors.*;
 import com.swrobotics.mathlib.Angle;
 import com.swrobotics.mathlib.CCWAngle;
-import com.swrobotics.mathlib.CWAngle;
 
 /**
  * Represents a CTRE CANCoder, which can measure both relative and absolute angles.

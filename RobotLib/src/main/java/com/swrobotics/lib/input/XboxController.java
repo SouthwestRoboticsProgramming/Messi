@@ -1,6 +1,7 @@
 package com.swrobotics.lib.input;
 
 import com.swrobotics.mathlib.Vec2d;
+
 import edu.wpi.first.wpilibj.GenericHID;
 
 import java.util.Arrays;

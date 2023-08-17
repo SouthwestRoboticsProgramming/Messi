@@ -18,18 +18,26 @@ public final class ArmVisualizer {
             Color topColor,
             Color wristColor) {
         MechanismRoot2d root = visualization.getRoot(name, x, y);
-        bottom = root.append(
-                new MechanismLigament2d(
-                        "Bottom Arm",
-                        ArmConstants.BOTTOM_LENGTH,
-                        0,
-                        6,
-                        new Color8Bit(bottomColor)));
-        top = bottom.append(
-                new MechanismLigament2d(
-                        "Top Arm", ArmConstants.TOP_LENGTH, 0, 6, new Color8Bit(topColor)));
-        wrist = top.append(
-                new MechanismLigament2d("Wrist", ArmConstants.WRIST_RAD / 2, 0, 6, new Color8Bit(wristColor)));
+        bottom =
+                root.append(
+                        new MechanismLigament2d(
+                                "Bottom Arm",
+                                ArmConstants.BOTTOM_LENGTH,
+                                0,
+                                6,
+                                new Color8Bit(bottomColor)));
+        top =
+                bottom.append(
+                        new MechanismLigament2d(
+                                "Top Arm", ArmConstants.TOP_LENGTH, 0, 6, new Color8Bit(topColor)));
+        wrist =
+                top.append(
+                        new MechanismLigament2d(
+                                "Wrist",
+                                ArmConstants.WRIST_RAD / 2,
+                                0,
+                                6,
+                                new Color8Bit(wristColor)));
     }
 
     public void setPose(ArmPose pose) {

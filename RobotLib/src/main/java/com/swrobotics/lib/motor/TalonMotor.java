@@ -11,10 +11,14 @@ import com.swrobotics.lib.encoder.Encoder;
 import com.swrobotics.lib.motor.sim.SimFeedbackMotor;
 import com.swrobotics.mathlib.Angle;
 import com.swrobotics.mathlib.CCWAngle;
+
 import edu.wpi.first.wpilibj.RobotBase;
 
 public interface TalonMotor extends FeedbackMotor {
-    static TalonMotor talonFX(int canId) { return talonFX(canId, ""); }
+    static TalonMotor talonFX(int canId) {
+        return talonFX(canId, "");
+    }
+
     static TalonMotor talonFX(int canId, String canBus) {
         if (RobotBase.isSimulation()) {
             return new Sim(MotorType.FALCON_500);
@@ -45,34 +49,46 @@ public interface TalonMotor extends FeedbackMotor {
             this.talon = talon;
             this.encoderTicksPerRotation = encoderTicksPerRotation;
 
-            integratedEncoder = new Encoder() {
-                @Override
-                public Angle getAngle() {
-                    return CCWAngle.rot(
-                            talon.getSelectedSensorPosition() / encoderTicksPerRotation);
-                }
+            integratedEncoder =
+                    new Encoder() {
+                        @Override
+                        public Angle getAngle() {
+                            return CCWAngle.rot(
+                                    talon.getSelectedSensorPosition() / encoderTicksPerRotation);
+                        }
 
-                @Override
-                public Angle getVelocity() {
-                    return CCWAngle.rot(
-                            talon.getSelectedSensorVelocity() / encoderTicksPerRotation * 10);
-                }
+                        @Override
+                        public Angle getVelocity() {
+                            return CCWAngle.rot(
+                                    talon.getSelectedSensorVelocity()
+                                            / encoderTicksPerRotation
+                                            * 10);
+                        }
 
-                @Override
-                public void setAngle(Angle angle) {
-                    talon.setSelectedSensorPosition(angle.ccw().rot() * encoderTicksPerRotation);
-                }
-            };
+                        @Override
+                        public void setAngle(Angle angle) {
+                            talon.setSelectedSensorPosition(
+                                    angle.ccw().rot() * encoderTicksPerRotation);
+                        }
+                    };
         }
 
         @Override
         public void setPositionArbFF(Angle position, double arbFF) {
-            talon.set(ControlMode.Position, position.ccw().rot() * encoderTicksPerRotation, DemandType.ArbitraryFeedForward, arbFF);
+            talon.set(
+                    ControlMode.Position,
+                    position.ccw().rot() * encoderTicksPerRotation,
+                    DemandType.ArbitraryFeedForward,
+                    arbFF);
         }
 
         @Override
         public void setVelocityArbFF(Angle velocity, double arbFF) {
-            talon.set(ControlMode.Velocity, velocity.ccw().rot() * encoderTicksPerRotation / 10, DemandType.ArbitraryFeedForward, arbFF);
+            talon.set(
+                    ControlMode.Velocity,
+                    velocity.ccw().rot() * encoderTicksPerRotation / 10,
+                    DemandType.ArbitraryFeedForward,
+                    arbFF);
         }
 
         @Override

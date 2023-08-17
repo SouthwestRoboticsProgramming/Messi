@@ -1,5 +1,7 @@
 package com.swrobotics.shufflelog.tool.pathfinder;
 
+import static com.swrobotics.mathlib.MathUtil.*;
+
 import com.swrobotics.mathlib.Vec2d;
 import com.swrobotics.messenger.client.MessageReader;
 import com.swrobotics.messenger.client.MessengerClient;
@@ -8,16 +10,17 @@ import com.swrobotics.shufflelog.math.Vector2i;
 import com.swrobotics.shufflelog.tool.ToolConstants;
 import com.swrobotics.shufflelog.tool.ViewportTool;
 import com.swrobotics.shufflelog.util.Cooldown;
+
 import edu.wpi.first.math.util.Units;
+
 import imgui.ImGui;
 import imgui.ImVec2;
+
 import processing.core.PConstants;
 import processing.core.PGraphics;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.swrobotics.mathlib.MathUtil.*;
 
 public final class PathfinderTool extends ViewportTool {
     private static final String MSG_CALC = "Pathfinding:Calc";
@@ -68,12 +71,13 @@ public final class PathfinderTool extends ViewportTool {
         msg.addHandler(MSG_PATH, this::onPath);
         msg.addHandler(MSG_INFO, this::onInfo);
 
-        msg.addDisconnectHandler(() -> {
-            info = null;
-            path.clear();
-            startPose.set(0, 0);
-            goalPose.set(0, 0);
-        });
+        msg.addDisconnectHandler(
+                () -> {
+                    info = null;
+                    path.clear();
+                    startPose.set(0, 0);
+                    goalPose.set(0, 0);
+                });
     }
 
     private void onCalc(String type, MessageReader reader) {
@@ -90,8 +94,7 @@ public final class PathfinderTool extends ViewportTool {
         path.clear();
 
         boolean good = reader.readBoolean();
-        if (!good)
-            return;
+        if (!good) return;
 
         int len = reader.readInt();
         for (int i = 0; i < len; i++) {
@@ -134,8 +137,20 @@ public final class PathfinderTool extends ViewportTool {
     }
 
     private Vector2i poseToState(Vec2d pose) {
-        int x = (int) (info.width * percent(wrap(pose.x, info.minBottom, info.maxBottom), info.minBottom, info.maxBottom));
-        int y = (int) (info.height * percent(wrap(pose.y, info.minTop, info.maxTop), info.minTop, info.maxTop));
+        int x =
+                (int)
+                        (info.width
+                                * percent(
+                                        wrap(pose.x, info.minBottom, info.maxBottom),
+                                        info.minBottom,
+                                        info.maxBottom));
+        int y =
+                (int)
+                        (info.height
+                                * percent(
+                                        wrap(pose.y, info.minTop, info.maxTop),
+                                        info.minTop,
+                                        info.maxTop));
         return new Vector2i(x, y);
     }
 
@@ -147,8 +162,7 @@ public final class PathfinderTool extends ViewportTool {
         }
 
         if (info == null) {
-            if (getInfoCooldown.request())
-                msg.send(MSG_GET_INFO);
+            if (getInfoCooldown.request()) msg.send(MSG_GET_INFO);
 
             ImGui.textDisabled("Fetching info...");
             return;
@@ -156,8 +170,16 @@ public final class PathfinderTool extends ViewportTool {
 
         Vector2i startState = poseToState(startPose);
         Vector2i goalState = poseToState(goalPose);
-        ImGui.text("Current: " + new Vec2d(startPose).componentMap(Math::toDegrees) + ", state " + startState);
-        ImGui.text("Goal: " + new Vec2d(goalPose).componentMap(Math::toDegrees) + ", state " + goalState);
+        ImGui.text(
+                "Current: "
+                        + new Vec2d(startPose).componentMap(Math::toDegrees)
+                        + ", state "
+                        + startState);
+        ImGui.text(
+                "Goal: "
+                        + new Vec2d(goalPose).componentMap(Math::toDegrees)
+                        + ", state "
+                        + goalState);
         ImGui.text("Path: " + (path.isEmpty() ? "NO" : (path.size() + " Points")));
 
         drawViewport();
@@ -214,10 +236,10 @@ public final class PathfinderTool extends ViewportTool {
 
         Vec2d previewPose = startPose;
         if (mouseX >= 0 && mouseX < info.width && mouseY >= 0 && mouseY < info.height) {
-            previewPose = new Vec2d(
-                    lerp(info.minBottom, info.maxBottom, mouseX / (double) info.width),
-                    lerp(info.minTop, info.maxTop, mouseY / (double) info.height)
-            );
+            previewPose =
+                    new Vec2d(
+                            lerp(info.minBottom, info.maxBottom, mouseX / (double) info.width),
+                            lerp(info.minTop, info.maxTop, mouseY / (double) info.height));
         }
 
         float midX = (float) Math.cos(previewPose.x) * BOTTOM_LEN;
@@ -235,20 +257,24 @@ public final class PathfinderTool extends ViewportTool {
             g.pushMatrix();
             g.translate((float) rect.x, (float) rect.y);
             g.rotate((float) rect.rotation);
-            g.rect((float) -rect.width/2, (float) -rect.height / 2, (float) rect.width, (float) rect.height);
+            g.rect(
+                    (float) -rect.width / 2,
+                    (float) -rect.height / 2,
+                    (float) rect.width,
+                    (float) rect.height);
             g.popMatrix();
         }
 
         g.stroke(255, 255, 0);
         g.strokeWeight(3 * strokeMul);
-        g.line((float) -info.frameSize/2, -1000, (float) -info.frameSize/2, 1000);
-        g.line((float) info.frameSize/2, -1000, (float) info.frameSize/2, 1000);
+        g.line((float) -info.frameSize / 2, -1000, (float) -info.frameSize / 2, 1000);
+        g.line((float) info.frameSize / 2, -1000, (float) info.frameSize / 2, 1000);
 
         g.stroke(255, 0, 0);
         g.strokeWeight(3 * strokeMul);
         g.noFill();
         g.ellipseMode(PConstants.CENTER);
-        g.ellipse(axisX, axisY, INTAKE_RAD*2, INTAKE_RAD*2);
-        g.ellipse(midX, midY, MIDPOINT_RAD*2, MIDPOINT_RAD*2);
+        g.ellipse(axisX, axisY, INTAKE_RAD * 2, INTAKE_RAD * 2);
+        g.ellipse(midX, midY, MIDPOINT_RAD * 2, MIDPOINT_RAD * 2);
     }
 }

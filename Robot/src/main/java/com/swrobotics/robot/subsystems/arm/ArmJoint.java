@@ -7,6 +7,7 @@ import com.swrobotics.lib.motor.MotorType;
 import com.swrobotics.lib.motor.SparkMaxMotor;
 import com.swrobotics.lib.net.NTEntry;
 import com.swrobotics.mathlib.Angle;
+
 import edu.wpi.first.wpilibj.RobotBase;
 
 // Note: "Horizontal" as a reference point here refers to true horizontal for
@@ -28,18 +29,28 @@ public class ArmJoint {
      * @param canCoderToArmRatio gear reduction from the CanCoder axis to the arm axis
      * @param motorToArmRatio gear reduction from the motor shaft to the arm axis
      * @param absEncoderOffset NTAngle to store CanCoder offset into
-     * @param invert whether to invert output. This should be true if a ccw rotation of the
-     *               motor output shaft corresponds to cw rotation of the arm
+     * @param invert whether to invert output. This should be true if a ccw rotation of the motor
+     *     output shaft corresponds to cw rotation of the arm
      */
-    public ArmJoint(int motorId, MotorType motorType, int canCoderId, double canCoderToArmRatio, double motorToArmRatio, NTEntry<Angle> absEncoderOffset, boolean invert) {
+    public ArmJoint(
+            int motorId,
+            MotorType motorType,
+            int canCoderId,
+            double canCoderToArmRatio,
+            double motorToArmRatio,
+            NTEntry<Angle> absEncoderOffset,
+            boolean invert) {
         motor = SparkMaxMotor.neo(motorId, motorType);
         motorEncoder = motor.getIntegratedEncoder();
         if (RobotBase.isReal()) {
             absoluteEncoder = new CanCoder(canCoderId).getAbsolute();
         } else {
-            absoluteEncoder = new SimEncoder(() ->
-                    ((SimEncoder) motorEncoder).getRawAngle().mul(canCoderToArmRatio / motorToArmRatio)
-            );
+            absoluteEncoder =
+                    new SimEncoder(
+                            () ->
+                                    ((SimEncoder) motorEncoder)
+                                            .getRawAngle()
+                                            .mul(canCoderToArmRatio / motorToArmRatio));
         }
         this.absEncoderOffset = absEncoderOffset;
 
@@ -72,16 +83,16 @@ public class ArmJoint {
     }
 
     /**
-     * Calibrates the motor encoder using the absolute encoder's reading. This is
-     * called on startup so the arm can start in any position.
+     * Calibrates the motor encoder using the absolute encoder's reading. This is called on startup
+     * so the arm can start in any position.
      */
     public void calibratePosition(Angle home) {
         motorEncoder.setAngle(getCalibrationAngle(home).mul(motorToArmRatio));
     }
 
     /**
-     * Calibrates the CanCoder to the home position. This assumes the arm is
-     * currently at the home angle physically.
+     * Calibrates the CanCoder to the home position. This assumes the arm is currently at the home
+     * angle physically.
      */
     public void calibrateCanCoder() {
         // Set offset such that the current position is considered 0

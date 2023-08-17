@@ -1,5 +1,7 @@
 package com.swrobotics.robot.subsystems.drive;
 
+import static com.swrobotics.robot.subsystems.drive.DrivetrainConstants.*;
+
 import com.swrobotics.lib.drive.swerve.StopPosition;
 import com.swrobotics.lib.drive.swerve.SwerveDrive;
 import com.swrobotics.lib.drive.swerve.SwerveModule;
@@ -13,15 +15,15 @@ import com.swrobotics.lib.motor.TalonMotor;
 import com.swrobotics.lib.net.NTBoolean;
 import com.swrobotics.lib.net.NTPrimitive;
 import com.swrobotics.robot.config.NTData;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.*;
-import org.littletonrobotics.junction.Logger;
 
-import static com.swrobotics.robot.subsystems.drive.DrivetrainConstants.*;
+import org.littletonrobotics.junction.Logger;
 
 public final class DrivetrainSubsystem extends SwerveDrive {
     public static final FieldInfo FIELD = FieldInfo.CHARGED_UP_2023;
@@ -43,7 +45,13 @@ public final class DrivetrainSubsystem extends SwerveDrive {
         if (RobotBase.isReal()) {
             encoder = new CanCoder(info.encoderID).getAbsolute();
         } else {
-            encoder = new SimEncoder(() -> ((SimEncoder) turnMotor.getIntegratedEncoder()).getRawAngle().div(attribs.getTurnGearRatio()).add(info.offset.get()));
+            encoder =
+                    new SimEncoder(
+                            () ->
+                                    ((SimEncoder) turnMotor.getIntegratedEncoder())
+                                            .getRawAngle()
+                                            .div(attribs.getTurnGearRatio())
+                                            .add(info.offset.get()));
         }
 
         // MK4i is inverted
@@ -52,8 +60,7 @@ public final class DrivetrainSubsystem extends SwerveDrive {
 
         turnMotor.setPID(NTData.SWERVE_TURN_KP, NTData.SWERVE_TURN_KI, NTData.SWERVE_TURN_KD);
 
-        return new SwerveModule(
-                attribs, driveMotor, turnMotor, encoder, pos, info.offset);
+        return new SwerveModule(attribs, driveMotor, turnMotor, encoder, pos, info.offset);
     }
 
     public DrivetrainSubsystem(PigeonGyroscope gyro) {
@@ -94,7 +101,8 @@ public final class DrivetrainSubsystem extends SwerveDrive {
         Logger.getInstance().recordOutput("Gyro/Angle", gyro.getAngle().ccw().deg());
         Logger.getInstance().recordOutput("Gyro/RawRoll", gyro.getRoll().ccw().deg());
         Logger.getInstance().recordOutput("Gyro/Up Vector", gyro.getUpVector().components());
-//        Logger.getInstance().recordOutput("Gyro/OffsetAmountDeg", gyroOffset.getDegrees());
+        //        Logger.getInstance().recordOutput("Gyro/OffsetAmountDeg",
+        // gyroOffset.getDegrees());
 
         Logger.getInstance().recordOutput("SwerveStates/Setpoints", getModuleTargetStates());
         Logger.getInstance().recordOutput("SwerveStates/Measured", getModuleStates());

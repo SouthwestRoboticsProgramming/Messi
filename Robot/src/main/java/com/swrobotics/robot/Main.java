@@ -1,9 +1,6 @@
 package com.swrobotics.robot;
 
-import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
-
-import java.io.File;
 
 /**
  * Do NOT add any static variables to this class, or any initialization at all. Unless you know what
@@ -20,10 +17,10 @@ public final class Main {
      */
     public static void main(String... args) {
         // Delete networktables persistent values
-//        File homeDir = Filesystem.getOperatingDirectory();
-//        new File(homeDir, "networktables.json").delete();
-//        new File(homeDir, "networktables.json.bck").delete();
-//        System.out.println("NT data deleted!");
+        //        File homeDir = Filesystem.getOperatingDirectory();
+        //        new File(homeDir, "networktables.json").delete();
+        //        new File(homeDir, "networktables.json.bck").delete();
+        //        System.out.println("NT data deleted!");
 
         RobotBase.startRobot(Robot::new);
     }

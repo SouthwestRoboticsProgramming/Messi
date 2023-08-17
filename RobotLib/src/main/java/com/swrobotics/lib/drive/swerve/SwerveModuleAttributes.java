@@ -14,14 +14,28 @@ public final class SwerveModuleAttributes {
     private static final double MK4_TURN_RATIO = 12.8;
     private static final double MK4I_TURN_RATIO = 150.0 / 7;
 
-    public static final SwerveModuleAttributes SDS_MK4_L1 = new SwerveModuleAttributes(L1_DRIVE_RATIO, MK4_TURN_RATIO, SDS_WHEEL_DIA, Units.feetToMeters(13.5));
-    public static final SwerveModuleAttributes SDS_MK4_L2 = new SwerveModuleAttributes(L2_DRIVE_RATIO, MK4_TURN_RATIO, SDS_WHEEL_DIA, Units.feetToMeters(16.3));
-    public static final SwerveModuleAttributes SDS_MK4_L3 = new SwerveModuleAttributes(L3_DRIVE_RATIO, MK4_TURN_RATIO, SDS_WHEEL_DIA, Units.feetToMeters(18));
-    public static final SwerveModuleAttributes SDS_MK4_L4 = new SwerveModuleAttributes(L4_DRIVE_RATIO, MK4_TURN_RATIO, SDS_WHEEL_DIA, Units.feetToMeters(21.4));
+    public static final SwerveModuleAttributes SDS_MK4_L1 =
+            new SwerveModuleAttributes(
+                    L1_DRIVE_RATIO, MK4_TURN_RATIO, SDS_WHEEL_DIA, Units.feetToMeters(13.5));
+    public static final SwerveModuleAttributes SDS_MK4_L2 =
+            new SwerveModuleAttributes(
+                    L2_DRIVE_RATIO, MK4_TURN_RATIO, SDS_WHEEL_DIA, Units.feetToMeters(16.3));
+    public static final SwerveModuleAttributes SDS_MK4_L3 =
+            new SwerveModuleAttributes(
+                    L3_DRIVE_RATIO, MK4_TURN_RATIO, SDS_WHEEL_DIA, Units.feetToMeters(18));
+    public static final SwerveModuleAttributes SDS_MK4_L4 =
+            new SwerveModuleAttributes(
+                    L4_DRIVE_RATIO, MK4_TURN_RATIO, SDS_WHEEL_DIA, Units.feetToMeters(21.4));
 
-    public static final SwerveModuleAttributes SDS_MK4I_L1 = new SwerveModuleAttributes(L1_DRIVE_RATIO, MK4I_TURN_RATIO, SDS_WHEEL_DIA, Units.feetToMeters(13.5));
-    public static final SwerveModuleAttributes SDS_MK4I_L2 = new SwerveModuleAttributes(L2_DRIVE_RATIO, MK4I_TURN_RATIO, SDS_WHEEL_DIA, Units.feetToMeters(16.3));
-    public static final SwerveModuleAttributes SDS_MK4I_L3 = new SwerveModuleAttributes(L3_DRIVE_RATIO, MK4I_TURN_RATIO, SDS_WHEEL_DIA, Units.feetToMeters(18.0));
+    public static final SwerveModuleAttributes SDS_MK4I_L1 =
+            new SwerveModuleAttributes(
+                    L1_DRIVE_RATIO, MK4I_TURN_RATIO, SDS_WHEEL_DIA, Units.feetToMeters(13.5));
+    public static final SwerveModuleAttributes SDS_MK4I_L2 =
+            new SwerveModuleAttributes(
+                    L2_DRIVE_RATIO, MK4I_TURN_RATIO, SDS_WHEEL_DIA, Units.feetToMeters(16.3));
+    public static final SwerveModuleAttributes SDS_MK4I_L3 =
+            new SwerveModuleAttributes(
+                    L3_DRIVE_RATIO, MK4I_TURN_RATIO, SDS_WHEEL_DIA, Units.feetToMeters(18.0));
 
     private final double driveGearRatio;
     private final double turnGearRatio;

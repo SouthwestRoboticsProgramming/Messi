@@ -1,8 +1,8 @@
 package com.swrobotics.lib.motor;
 
 /**
- * Abstraction for a motor. This contains the basic functionality
- * every motor controller should provide.
+ * Abstraction for a motor. This contains the basic functionality every motor controller should
+ * provide.
  *
  * <p>Clockwise and counterclockwise are from the perspective of looking at the face of the motor,
  * with the shaft toward you.

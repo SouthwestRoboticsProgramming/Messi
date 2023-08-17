@@ -5,6 +5,7 @@ import com.swrobotics.lib.motor.MotorType;
 import com.swrobotics.lib.motor.SparkMaxMotor;
 import com.swrobotics.lib.schedule.SwitchableSubsystemBase;
 import com.swrobotics.robot.config.CANAllocation;
+
 import org.littletonrobotics.junction.Logger;
 
 public final class IntakeSubsystem extends SwitchableSubsystemBase {
@@ -25,8 +26,7 @@ public final class IntakeSubsystem extends SwitchableSubsystemBase {
     }
 
     public void set(Mode mode, GamePiece gamePiece) {
-        if (!isEnabled())
-            return;
+        if (!isEnabled()) return;
 
         Logger.getInstance().recordOutput("Intake/Mode", mode.toString());
         Logger.getInstance().recordOutput("Intake/Game Piece", gamePiece.toString());

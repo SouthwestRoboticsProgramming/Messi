@@ -4,11 +4,26 @@ import com.swrobotics.lib.motor.MotorType;
 import com.swrobotics.lib.net.NTEntry;
 import com.swrobotics.mathlib.Angle;
 import com.swrobotics.robot.config.NTData;
+
 import org.littletonrobotics.junction.Logger;
 
 public final class WristJoint extends ArmJoint {
-    public WristJoint(int motorId, MotorType motorType, int canCoderId, double canCoderToArmRatio, double motorToArmRatio, NTEntry<Angle> absEncoderOffset, boolean invert) {
-        super(motorId, motorType, canCoderId, canCoderToArmRatio, motorToArmRatio, absEncoderOffset, invert);
+    public WristJoint(
+            int motorId,
+            MotorType motorType,
+            int canCoderId,
+            double canCoderToArmRatio,
+            double motorToArmRatio,
+            NTEntry<Angle> absEncoderOffset,
+            boolean invert) {
+        super(
+                motorId,
+                motorType,
+                canCoderId,
+                canCoderToArmRatio,
+                motorToArmRatio,
+                absEncoderOffset,
+                invert);
         motor.setPID(NTData.ARM_WRIST_KP, NTData.ARM_WRIST_KI, NTData.ARM_WRIST_KD);
     }
 
@@ -21,8 +36,10 @@ public final class WristJoint extends ArmJoint {
         motor.setPositionArbFF(angle.mul(motorToArmRatio), ff);
         Logger.getInstance().recordOutput("Wrist/Target ccw deg", angle.ccw().deg());
         Logger.getInstance().recordOutput("Wrist/Current ccw deg", getCurrentAngle().ccw().deg());
-        Logger.getInstance().recordOutput("Wrist/Motor target ccw deg", angle.mul(motorToArmRatio).ccw().deg());
-        Logger.getInstance().recordOutput("Wrist/Motor current ccw deg", motorEncoder.getAngle().ccw().deg());
+        Logger.getInstance()
+                .recordOutput("Wrist/Motor target ccw deg", angle.mul(motorToArmRatio).ccw().deg());
+        Logger.getInstance()
+                .recordOutput("Wrist/Motor current ccw deg", motorEncoder.getAngle().ccw().deg());
         Logger.getInstance().recordOutput("Wrist/Arb FF", ff);
     }
 }

@@ -1,9 +1,9 @@
 package com.swrobotics.robot.commands.arm;
 
 import com.swrobotics.robot.RobotContainer;
-
 import com.swrobotics.robot.subsystems.arm.ArmPosition;
 import com.swrobotics.robot.subsystems.arm.ArmSubsystem;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 import java.util.function.Supplier;

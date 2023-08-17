@@ -362,7 +362,10 @@ public final class Vec2d {
         return dest;
     }
 
-    public Vec2d componentMap(Function<Double, Double> mapFn) { return componentMap(mapFn, this); }
+    public Vec2d componentMap(Function<Double, Double> mapFn) {
+        return componentMap(mapFn, this);
+    }
+
     public Vec2d componentMap(Function<Double, Double> mapFn, Vec2d dest) {
         dest.x = mapFn.apply(x);
         dest.y = mapFn.apply(y);

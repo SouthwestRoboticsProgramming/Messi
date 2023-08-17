@@ -11,7 +11,7 @@ public final class ArmConstants {
     // Gear ratios from motor output to arm joint movement
     public static final double BOTTOM_GEAR_RATIO = 600;
     public static final double TOP_GEAR_RATIO = 288;
-    public static final double WRIST_GEAR_RATIO = 10 * (50.0/28.0);
+    public static final double WRIST_GEAR_RATIO = 10 * (50.0 / 28.0);
     public static final double CANCODER_TO_ARM_RATIO = 2;
     public static final double WRIST_CANCODER_TO_ARM_RATIO = 1;
 

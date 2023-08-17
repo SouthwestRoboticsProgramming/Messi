@@ -23,7 +23,6 @@ public final class SimVelocityPIDCtrl implements SimControlMode<Angle> {
     public double calc(Angle demand) {
         return pid.calc(
                 encoder.getVelocity().ccw().rot() * sensorUnitsPerRPS,
-                demand.ccw().rot() * sensorUnitsPerRPS
-        );
+                demand.ccw().rot() * sensorUnitsPerRPS);
     }
 }

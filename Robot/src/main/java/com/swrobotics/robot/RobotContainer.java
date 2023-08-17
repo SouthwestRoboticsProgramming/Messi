@@ -31,12 +31,9 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 /**
- * This class is where the bulk of the robot should be declared. Since
- * Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in
- * the {@link Robot}
- * periodic methods (other than the scheduler calls). Instead, the structure of
- * the robot (including
+ * This class is where the bulk of the robot should be declared. Since Command-based is a
+ * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
+ * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
@@ -65,16 +62,14 @@ public class RobotContainer {
 
     public final MessengerClient messenger;
 
-    /**
-     * The container for the robot. Contains subsystems, OI devices, and commands.
-     */
+    /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
         // Turn off joystick warnings
         DriverStation.silenceJoystickConnectionWarning(Settings.getMode() == Settings.Mode.REAL);
 
         // Initialize Messenger
         String host = RobotBase.isSimulation() ? MESSENGER_HOST_SIM : MESSENGER_HOST_ROBOT;
-//        String host = MESSENGER_HOST_ROBOT;
+        //        String host = MESSENGER_HOST_ROBOT;
         messenger = new MessengerClient(host, MESSENGER_PORT, MESSENGER_NAME);
 
         new FileSystemAPI(messenger, "RoboRIO", Filesystem.getOperatingDirectory());
@@ -92,12 +87,20 @@ public class RobotContainer {
         eventMap.put("BALANCE", new BalanceSequenceCommand(this, false));
         eventMap.put("BALANCE_REVERSE", new BalanceSequenceCommand(this, true));
 
-        eventMap.put("SCORE_CUBE", new ScoreSequenceCommand(
-                this, GamePiece.CUBE, ArmPositions.CUBE.scoreHigh,
-                0.5, 1.0, CCWAngle.deg(100)));
-//        eventMap.put("SCORE_CUBE_MID", new ScoreSequenceCommand(this, GamePiece.CUBE, ArmPositions.CUBE.scoreMid.front));
+        eventMap.put(
+                "SCORE_CUBE",
+                new ScoreSequenceCommand(
+                        this,
+                        GamePiece.CUBE,
+                        ArmPositions.CUBE.scoreHigh,
+                        0.5,
+                        1.0,
+                        CCWAngle.deg(100)));
+        //        eventMap.put("SCORE_CUBE_MID", new ScoreSequenceCommand(this, GamePiece.CUBE,
+        // ArmPositions.CUBE.scoreMid.front));
 
-//        eventMap.put("SCORE_CONE", new ScoreSequenceCommand(this, GamePiece.CONE, ArmPositions.CONE.scoreHigh));
+        //        eventMap.put("SCORE_CONE", new ScoreSequenceCommand(this, GamePiece.CONE,
+        // ArmPositions.CONE.scoreHigh));
 
         putArmEvent(eventMap, "ARM_DEFAULT", ArmPositions.DEFAULT);
         putArmEventSet(eventMap, "ARM_CONE", ArmPositions.CONE);
@@ -193,12 +196,14 @@ public class RobotContainer {
         eventMap.put(name, new MoveArmToPositionCommand(this, pos));
     }
 
-    private void putArmEventPair(Map<String, Command> eventMap, String prefix, ArmPositions.FrontBackPair pair) {
+    private void putArmEventPair(
+            Map<String, Command> eventMap, String prefix, ArmPositions.FrontBackPair pair) {
         putArmEvent(eventMap, prefix + "_FRONT", pair.front);
         putArmEvent(eventMap, prefix + "_BACK", pair.back);
     }
 
-    private void putArmEventSet(Map<String, Command> eventMap, String prefix, ArmPositions.PositionSet set) {
+    private void putArmEventSet(
+            Map<String, Command> eventMap, String prefix, ArmPositions.PositionSet set) {
         putArmEvent(eventMap, prefix + "_HIGH_FRONT", set.scoreHigh);
         putArmEventPair(eventMap, prefix + "_MID", set.scoreMid);
         putArmEventPair(eventMap, prefix + "_FLOOR", set.floorPickup);

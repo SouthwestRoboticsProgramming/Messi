@@ -8,6 +8,7 @@ import com.swrobotics.lib.encoder.Encoder;
 import com.swrobotics.lib.motor.sim.*;
 import com.swrobotics.mathlib.Angle;
 import com.swrobotics.mathlib.CCWAngle;
+
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotBase;
 
@@ -29,10 +30,15 @@ public interface SparkMaxMotor extends FeedbackMotor {
     // Add special functionality here
 
     void setPositionSmartMotion(Angle position);
+
     void setSmartMotionAccelStrategy(SparkMaxPIDController.AccelStrategy accelStrategy);
+
     void setSmartMotionMinOutputVelocity(Angle minVel);
+
     void setSmartMotionMaxVelocity(Angle maxVel);
+
     void setSmartMotionMaxAccel(Angle maxAccel);
+
     void setSmartMotionAllowedClosedLoopErr(Angle maxErr);
 
     final class Real implements SparkMaxMotor {
@@ -49,29 +55,30 @@ public interface SparkMaxMotor extends FeedbackMotor {
             encoder.setVelocityConversionFactor(1); // RPM
             pid.setFeedbackDevice(encoder);
 
-            this.encoder = new Encoder() {
-                @Override
-                public Angle getAngle() {
-                    return CCWAngle.rot(encoder.getPosition());
-                }
+            this.encoder =
+                    new Encoder() {
+                        @Override
+                        public Angle getAngle() {
+                            return CCWAngle.rot(encoder.getPosition());
+                        }
 
-                @Override
-                public Angle getVelocity() {
-                    return CCWAngle.rad(
-                            Units.rotationsPerMinuteToRadiansPerSecond(
-                                    encoder.getVelocity()));
-                }
+                        @Override
+                        public Angle getVelocity() {
+                            return CCWAngle.rad(
+                                    Units.rotationsPerMinuteToRadiansPerSecond(
+                                            encoder.getVelocity()));
+                        }
 
-                @Override
-                public void setAngle(Angle angle) {
-                    encoder.setPosition(angle.ccw().rot());
-                }
+                        @Override
+                        public void setAngle(Angle angle) {
+                            encoder.setPosition(angle.ccw().rot());
+                        }
 
-                @Override
-                public void setInverted(boolean inverted) {
-                    encoder.setInverted(inverted);
-                }
-            };
+                        @Override
+                        public void setInverted(boolean inverted) {
+                            encoder.setInverted(inverted);
+                        }
+                    };
         }
 
         @Override
@@ -81,12 +88,22 @@ public interface SparkMaxMotor extends FeedbackMotor {
 
         @Override
         public void setPositionArbFF(Angle position, double arbFF) {
-            pid.setReference(position.ccw().rot(), CANSparkMax.ControlType.kPosition, 0, arbFF, SparkMaxPIDController.ArbFFUnits.kPercentOut);
+            pid.setReference(
+                    position.ccw().rot(),
+                    CANSparkMax.ControlType.kPosition,
+                    0,
+                    arbFF,
+                    SparkMaxPIDController.ArbFFUnits.kPercentOut);
         }
 
         @Override
         public void setVelocityArbFF(Angle velocity, double arbFF) {
-            pid.setReference(Units.radiansPerSecondToRotationsPerMinute(velocity.ccw().rad()), CANSparkMax.ControlType.kVelocity, 0, arbFF, SparkMaxPIDController.ArbFFUnits.kPercentOut);
+            pid.setReference(
+                    Units.radiansPerSecondToRotationsPerMinute(velocity.ccw().rad()),
+                    CANSparkMax.ControlType.kVelocity,
+                    0,
+                    arbFF,
+                    SparkMaxPIDController.ArbFFUnits.kPercentOut);
         }
 
         @Override
@@ -141,17 +158,20 @@ public interface SparkMaxMotor extends FeedbackMotor {
 
         @Override
         public void setSmartMotionMinOutputVelocity(Angle minVel) {
-            pid.setSmartMotionMinOutputVelocity(Units.radiansPerSecondToRotationsPerMinute(minVel.ccw().abs().rad()), 0);
+            pid.setSmartMotionMinOutputVelocity(
+                    Units.radiansPerSecondToRotationsPerMinute(minVel.ccw().abs().rad()), 0);
         }
 
         @Override
         public void setSmartMotionMaxVelocity(Angle maxVel) {
-            pid.setSmartMotionMaxVelocity(Units.radiansPerSecondToRotationsPerMinute(maxVel.ccw().abs().rad()), 0);
+            pid.setSmartMotionMaxVelocity(
+                    Units.radiansPerSecondToRotationsPerMinute(maxVel.ccw().abs().rad()), 0);
         }
 
         @Override
         public void setSmartMotionMaxAccel(Angle maxAccel) {
-            pid.setSmartMotionMaxAccel(Units.radiansPerSecondToRotationsPerMinute(maxAccel.ccw().abs().rad()), 0);
+            pid.setSmartMotionMaxAccel(
+                    Units.radiansPerSecondToRotationsPerMinute(maxAccel.ccw().abs().rad()), 0);
         }
 
         @Override
@@ -200,9 +220,7 @@ public interface SparkMaxMotor extends FeedbackMotor {
 
         private static final class SimSmartMotionCtrl implements SimControlMode<Angle> {
             @Override
-            public void begin() {
-
-            }
+            public void begin() {}
 
             @Override
             public double calc(Angle demand) {

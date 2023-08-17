@@ -4,6 +4,7 @@ import com.swrobotics.lib.motor.Motor;
 import com.swrobotics.lib.motor.MotorType;
 import com.swrobotics.mathlib.Angle;
 import com.swrobotics.mathlib.MathUtil;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public abstract class SimMotor extends SubsystemBase implements Motor {
@@ -55,9 +56,7 @@ public abstract class SimMotor extends SubsystemBase implements Motor {
         double pctOut = currentControl == null ? 0 : currentControl.calc();
 
         // TODO: Real physics
-        rawAngle = rawAngle.add(
-                type.freeSpeed.mul(
-                        MathUtil.clamp(pctOut, -1, 1) * flip * 0.02));
+        rawAngle = rawAngle.add(type.freeSpeed.mul(MathUtil.clamp(pctOut, -1, 1) * flip * 0.02));
     }
 
     @Override

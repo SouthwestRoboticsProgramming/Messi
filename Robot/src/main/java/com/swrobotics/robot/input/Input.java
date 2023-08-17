@@ -1,7 +1,7 @@
 package com.swrobotics.robot.input;
 
-import com.swrobotics.lib.drive.swerve.SwerveModuleAttributes;
 import com.swrobotics.lib.drive.swerve.StopPosition;
+import com.swrobotics.lib.drive.swerve.SwerveModuleAttributes;
 import com.swrobotics.lib.input.XboxController;
 import com.swrobotics.lib.net.NTBoolean;
 import com.swrobotics.lib.time.Duration;
@@ -15,8 +15,8 @@ import com.swrobotics.robot.subsystems.arm.ArmPosition;
 import com.swrobotics.robot.subsystems.arm.ArmPositions;
 import com.swrobotics.robot.subsystems.drive.DrivetrainSubsystem;
 import com.swrobotics.robot.subsystems.intake.GamePiece;
-
 import com.swrobotics.robot.subsystems.intake.IntakeSubsystem;
+
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -60,7 +60,8 @@ public final class Input extends SubsystemBase {
 
     private static final double DEFAULT_SPEED = 1.5; // Meters per second
     private static final double FAST_SPEED = 4.11; // Meters per second
-    private static final double REALLY_FAST_SPEED = SwerveModuleAttributes.SDS_MK4I_L3.getMaxVelocity();
+    private static final double REALLY_FAST_SPEED =
+            SwerveModuleAttributes.SDS_MK4I_L3.getMaxVelocity();
     private static final CWAngle MAX_ROTATION = CWAngle.rad(Math.PI);
 
     private static final NTBoolean L_IS_CONE = new NTBoolean("Is Cone", false);
@@ -102,7 +103,8 @@ public final class Input extends SubsystemBase {
         gamePiece = GamePiece.CUBE;
         defaultArmNudgePosition = new Vec2d(0, 0);
         defaultArmNudgeAngle = Angle.ZERO;
-        armPositionDebounce = new ValueDebouncer<>(new Duration(0.05, TimeUnit.SECONDS), ArmPositions.DEFAULT);
+        armPositionDebounce =
+                new ValueDebouncer<>(new Duration(0.05, TimeUnit.SECONDS), ArmPositions.DEFAULT);
         prevArmTarget = ArmPositions.DEFAULT;
 
         /*
@@ -147,16 +149,16 @@ public final class Input extends SubsystemBase {
 
     // ---- Manipulator controls ----
 
-    private ArmPosition.NT inferDirection(ArmPositions.FrontBackPair pair, Angle currentAngle, Angle relativeForward) {
+    private ArmPosition.NT inferDirection(
+            ArmPositions.FrontBackPair pair, Angle currentAngle, Angle relativeForward) {
         Vec2d currentAngleVec = new Vec2d(currentAngle, 1);
         Vec2d relativeForwardVec = new Vec2d(relativeForward, 1);
 
         boolean isFront = currentAngleVec.dot(relativeForwardVec) >= 0;
-        if (manipulator.back.isPressed())
-            isFront = !isFront;
+        if (manipulator.back.isPressed()) isFront = !isFront;
 
         return isFront ? pair.front : pair.back;
-//        return manipulator.back.isPressed() ? pair.back : pair.front;
+        //        return manipulator.back.isPressed() ? pair.back : pair.front;
     }
 
     private Angle towardsChuteAngle() {
@@ -173,8 +175,7 @@ public final class Input extends SubsystemBase {
 
     // TODO: Cones in back only
     private void manipulatorPeriodic() {
-        if (DriverStation.isAutonomous())
-            return;
+        if (DriverStation.isAutonomous()) return;
 
         Angle angle = Angle.fromRotation2d(robot.swerveDrive.getPose().getRotation());
 
@@ -186,7 +187,8 @@ public final class Input extends SubsystemBase {
             intakeMode = IntakeSubsystem.Mode.EJECT;
 
         ArmPosition.NT ntArmTarget = ArmPositions.DEFAULT;
-        ArmPositions.PositionSet gamePieceSet = gamePiece == GamePiece.CONE ? ArmPositions.CONE : ArmPositions.CUBE;
+        ArmPositions.PositionSet gamePieceSet =
+                gamePiece == GamePiece.CONE ? ArmPositions.CONE : ArmPositions.CUBE;
 
         if (manipulator.a.isPressed()) {
             if (manipulator.x.isPressed()) {
@@ -203,17 +205,18 @@ public final class Input extends SubsystemBase {
 
         if (manipulator.b.isPressed()) {
             // TEMP FIX: Disable cone pickup in the back
-//            if (gamePiece == GamePiece.CUBE) {
-                if (manipulator.y.isPressed()) {
-//                    ntArmTarget = ArmPositions.DOWNED_CONE_FLOOR_PICKUP.back;
-//                    effectiveGamePiece = GamePiece.CONE;
-                } else {
-                    ntArmTarget = gamePieceSet.floorPickup.back;
-                }
-//            }
+            //            if (gamePiece == GamePiece.CUBE) {
+            if (manipulator.y.isPressed()) {
+                //                    ntArmTarget = ArmPositions.DOWNED_CONE_FLOOR_PICKUP.back;
+                //                    effectiveGamePiece = GamePiece.CONE;
+            } else {
+                ntArmTarget = gamePieceSet.floorPickup.back;
+            }
+            //            }
             intakeMode = IntakeSubsystem.Mode.INTAKE;
         } else if (manipulator.y.isPressed()) {
-            ntArmTarget = inferDirection(gamePieceSet.substationPickup, angle, towardsSubstationAngle());
+            ntArmTarget =
+                    inferDirection(gamePieceSet.substationPickup, angle, towardsSubstationAngle());
             intakeMode = IntakeSubsystem.Mode.INTAKE;
         }
 
@@ -225,33 +228,38 @@ public final class Input extends SubsystemBase {
             ntArmTarget = inferDirection(gamePieceSet.scoreMid, angle, towardsGridAngle());
         }
 
-        Vec2d translationNudge = manipulator.getLeftStick().mul(NTData.INPUT_ARM_TRANSLATION_RATE.get()).mul(1, -1);
-        Angle wristNudge = NTData.INPUT_WRIST_ROTATION_RATE.get().mul(manipulator.rightStickY.get());
+        Vec2d translationNudge =
+                manipulator.getLeftStick().mul(NTData.INPUT_ARM_TRANSLATION_RATE.get()).mul(1, -1);
+        Angle wristNudge =
+                NTData.INPUT_WRIST_ROTATION_RATE.get().mul(manipulator.rightStickY.get());
 
         // No shakey
-        if (translationNudge.magnitudeSq() > 0)
-            robot.arm.moveNow();
+        if (translationNudge.magnitudeSq() > 0) robot.arm.moveNow();
 
         boolean masonNeedsToTurnTheRobot = ntArmTarget == null;
-//        driver.setRumble(masonNeedsToTurnTheRobot ? 0.5 : 0);
-        if (masonNeedsToTurnTheRobot)
-            ntArmTarget = ArmPositions.DEFAULT;
+        //        driver.setRumble(masonNeedsToTurnTheRobot ? 0.5 : 0);
+        if (masonNeedsToTurnTheRobot) ntArmTarget = ArmPositions.DEFAULT;
 
-//        ntArmTarget = armPositionDebounce.debounce(ntArmTarget);
+        //        ntArmTarget = armPositionDebounce.debounce(ntArmTarget);
 
         ArmPosition armTarget;
         if (ntArmTarget == ArmPositions.DEFAULT) {
-//            defaultArmNudgePosition.add(translationNudge);
-//            defaultArmNudgeAngle = defaultArmNudgeAngle.add(wristNudge);
+            //            defaultArmNudgePosition.add(translationNudge);
+            //            defaultArmNudgeAngle = defaultArmNudgeAngle.add(wristNudge);
 
             ArmPosition def = ntArmTarget.get();
-            armTarget = new ArmPosition(def.axisPos.add(defaultArmNudgePosition), def.wristAngle.add(defaultArmNudgeAngle));
+            armTarget =
+                    new ArmPosition(
+                            def.axisPos.add(defaultArmNudgePosition),
+                            def.wristAngle.add(defaultArmNudgeAngle));
         } else {
             defaultArmNudgePosition.set(0, 0);
             defaultArmNudgeAngle = Angle.ZERO;
 
             ArmPosition raw = ntArmTarget.get();
-            ArmPosition newArmTarget = new ArmPosition(raw.axisPos.add(translationNudge), raw.wristAngle.add(wristNudge));
+            ArmPosition newArmTarget =
+                    new ArmPosition(
+                            raw.axisPos.add(translationNudge), raw.wristAngle.add(wristNudge));
             if (newArmTarget.toPose() != null) {
                 armTarget = newArmTarget;
             } else if (manipulator.start.isRising()) {
@@ -264,22 +272,28 @@ public final class Input extends SubsystemBase {
         }
 
         // Bring back pose if too far
-        if (armTarget.axisPos.magnitudeSq() > MathUtil.square(ArmConstants.BOTTOM_LENGTH + ArmConstants.TOP_LENGTH)) {
-            armTarget.axisPos.normalize().mul(ArmConstants.BOTTOM_LENGTH + ArmConstants.TOP_LENGTH - 0.2);
+        if (armTarget.axisPos.magnitudeSq()
+                > MathUtil.square(ArmConstants.BOTTOM_LENGTH + ArmConstants.TOP_LENGTH)) {
+            armTarget
+                    .axisPos
+                    .normalize()
+                    .mul(ArmConstants.BOTTOM_LENGTH + ArmConstants.TOP_LENGTH - 0.2);
         }
 
         robot.intake.set(intakeMode, effectiveGamePiece);
 
         // If changing target and either current or new target requires
         // intermediate position, go so intermediate position first
-        if (NTData.ARM_INTERMEDIATE_ENABLE.get() && prevArmTarget != ntArmTarget && (prevArmTarget.useIntermediate() || ntArmTarget.useIntermediate())) {
+        if (NTData.ARM_INTERMEDIATE_ENABLE.get()
+                && prevArmTarget != ntArmTarget
+                && (prevArmTarget.useIntermediate() || ntArmTarget.useIntermediate())) {
             // Choose intermediate point between points, at highest level
             ArmPosition intermediatePos = prevArmTarget.get();
             double pct = NTData.ARM_INTERMEDIATE_PERCENT.get();
-            if (armTarget.axisPos.y < intermediatePos.axisPos.y)
-                pct = 1 - pct;
+            if (armTarget.axisPos.y < intermediatePos.axisPos.y) pct = 1 - pct;
 
-            intermediatePos.axisPos.x = MathUtil.lerp(intermediatePos.axisPos.x, armTarget.axisPos.x, pct);
+            intermediatePos.axisPos.x =
+                    MathUtil.lerp(intermediatePos.axisPos.x, armTarget.axisPos.x, pct);
             intermediatePos.axisPos.y = Math.max(intermediatePos.axisPos.y, armTarget.axisPos.y);
             robot.arm.setTargetPosition(intermediatePos);
 
@@ -295,7 +309,7 @@ public final class Input extends SubsystemBase {
 
     @Override
     public void periodic() {
-//        if (!DriverStation.isTeleop()) return;
+        //        if (!DriverStation.isTeleop()) return;
         driverPeriodic();
         manipulatorPeriodic();
     }

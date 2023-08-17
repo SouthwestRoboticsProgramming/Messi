@@ -126,6 +126,6 @@ public final class MathUtil {
     }
 
     public static boolean fuzzyEquals(double a, double b) {
-	return Math.abs(a - b) <= EPSILON;
+        return Math.abs(a - b) <= EPSILON;
     }
 }

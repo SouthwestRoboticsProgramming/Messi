@@ -4,8 +4,7 @@ import com.swrobotics.lib.time.Duration;
 import com.swrobotics.lib.time.Timestamp;
 
 /**
- * Debounces an input value by keeping a value steady until a new value is
- * sustained.
+ * Debounces an input value by keeping a value steady until a new value is sustained.
  *
  * @param <T> type of value to debounce
  */

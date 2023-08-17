@@ -1,6 +1,5 @@
 package com.swrobotics.mathlib;
 
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 
 import java.util.Objects;
@@ -520,30 +519,31 @@ public final class Vec3d {
         return new double[] {x, y, z};
     }
 
-//    public Vec3d rotateX(Angle a) {
-//
-//    }
+    //    public Vec3d rotateX(Angle a) {
+    //
+    //    }
 
     // TODO
-//    public double distanceToLineSegmentSq(Vec3d a, Vec3d b) {
-//        double l2 = a.distanceToSq(b);
-//        if (l2 == 0) return distanceToSq(a);
-//        double t = ((x - a.x) * (b.x - a.x) + (y - a.y) * (b.y - a.y)) / l2;
-//        t = MathUtil.clamp(t, 0, 1);
-//        return distanceToSq(new Vec3d(MathUtil.lerp(a.x, b.x, t), MathUtil.lerp(a.y, b.y, t)));
-//    }
-//
-//    public double distanceToLineSegment(Vec3d a, Vec3d b) {
-//        return Math.sqrt(distanceToLineSegmentSq(a, b));
-//    }
-//
-//    public Vec3d rotateAround(Vec3d axis, Angle angle) {
-//
-//    }
-//
-//    public Vec3d rotateAround(Vec3d axis, Angle angle, Vec3d dest) {
-//
-//    }
+    //    public double distanceToLineSegmentSq(Vec3d a, Vec3d b) {
+    //        double l2 = a.distanceToSq(b);
+    //        if (l2 == 0) return distanceToSq(a);
+    //        double t = ((x - a.x) * (b.x - a.x) + (y - a.y) * (b.y - a.y)) / l2;
+    //        t = MathUtil.clamp(t, 0, 1);
+    //        return distanceToSq(new Vec3d(MathUtil.lerp(a.x, b.x, t), MathUtil.lerp(a.y, b.y,
+    // t)));
+    //    }
+    //
+    //    public double distanceToLineSegment(Vec3d a, Vec3d b) {
+    //        return Math.sqrt(distanceToLineSegmentSq(a, b));
+    //    }
+    //
+    //    public Vec3d rotateAround(Vec3d axis, Angle angle) {
+    //
+    //    }
+    //
+    //    public Vec3d rotateAround(Vec3d axis, Angle angle, Vec3d dest) {
+    //
+    //    }
 
     /**
      * Normalizes this vector by making its magnitude 1, thus becoming a unit vector.
@@ -649,50 +649,158 @@ public final class Vec3d {
         return dest;
     }
 
-    public Vec2d xx() { return new Vec2d(x, x); }
-    public Vec2d xy() { return new Vec2d(x, y); }
-    public Vec2d xz() { return new Vec2d(x, z); }
-    public Vec2d yx() { return new Vec2d(y, x); }
-    public Vec2d yy() { return new Vec2d(y, y); }
-    public Vec2d yz() { return new Vec2d(y, z); }
-    public Vec2d zx() { return new Vec2d(z, x); }
-    public Vec2d zy() { return new Vec2d(z, y); }
-    public Vec2d zz() { return new Vec2d(z, z); }
+    public Vec2d xx() {
+        return new Vec2d(x, x);
+    }
 
-    public Vec3d xxx() { return new Vec3d(x, x, x); }
-    public Vec3d xxy() { return new Vec3d(x, x, y); }
-    public Vec3d xxz() { return new Vec3d(x, x, z); }
-    public Vec3d xyx() { return new Vec3d(x, y, x); }
-    public Vec3d xyy() { return new Vec3d(x, y, y); }
-    public Vec3d xyz() { return new Vec3d(x, y, z); }
-    public Vec3d xzx() { return new Vec3d(x, z, x); }
-    public Vec3d xzy() { return new Vec3d(x, z, y); }
-    public Vec3d xzz() { return new Vec3d(x, z, z); }
-    public Vec3d yxx() { return new Vec3d(y, x, x); }
-    public Vec3d yxy() { return new Vec3d(y, x, y); }
-    public Vec3d yxz() { return new Vec3d(y, x, z); }
-    public Vec3d yyx() { return new Vec3d(y, y, x); }
-    public Vec3d yyy() { return new Vec3d(y, y, y); }
-    public Vec3d yyz() { return new Vec3d(y, y, z); }
-    public Vec3d yzx() { return new Vec3d(y, z, x); }
-    public Vec3d yzy() { return new Vec3d(y, z, y); }
-    public Vec3d yzz() { return new Vec3d(y, z, z); }
-    public Vec3d zxx() { return new Vec3d(z, x, x); }
-    public Vec3d zxy() { return new Vec3d(z, x, y); }
-    public Vec3d zxz() { return new Vec3d(z, x, z); }
-    public Vec3d zyx() { return new Vec3d(z, y, x); }
-    public Vec3d zyy() { return new Vec3d(z, y, y); }
-    public Vec3d zyz() { return new Vec3d(z, y, z); }
-    public Vec3d zzx() { return new Vec3d(z, z, x); }
-    public Vec3d zzy() { return new Vec3d(z, z, y); }
-    public Vec3d zzz() { return new Vec3d(z, z, z); }
+    public Vec2d xy() {
+        return new Vec2d(x, y);
+    }
+
+    public Vec2d xz() {
+        return new Vec2d(x, z);
+    }
+
+    public Vec2d yx() {
+        return new Vec2d(y, x);
+    }
+
+    public Vec2d yy() {
+        return new Vec2d(y, y);
+    }
+
+    public Vec2d yz() {
+        return new Vec2d(y, z);
+    }
+
+    public Vec2d zx() {
+        return new Vec2d(z, x);
+    }
+
+    public Vec2d zy() {
+        return new Vec2d(z, y);
+    }
+
+    public Vec2d zz() {
+        return new Vec2d(z, z);
+    }
+
+    public Vec3d xxx() {
+        return new Vec3d(x, x, x);
+    }
+
+    public Vec3d xxy() {
+        return new Vec3d(x, x, y);
+    }
+
+    public Vec3d xxz() {
+        return new Vec3d(x, x, z);
+    }
+
+    public Vec3d xyx() {
+        return new Vec3d(x, y, x);
+    }
+
+    public Vec3d xyy() {
+        return new Vec3d(x, y, y);
+    }
+
+    public Vec3d xyz() {
+        return new Vec3d(x, y, z);
+    }
+
+    public Vec3d xzx() {
+        return new Vec3d(x, z, x);
+    }
+
+    public Vec3d xzy() {
+        return new Vec3d(x, z, y);
+    }
+
+    public Vec3d xzz() {
+        return new Vec3d(x, z, z);
+    }
+
+    public Vec3d yxx() {
+        return new Vec3d(y, x, x);
+    }
+
+    public Vec3d yxy() {
+        return new Vec3d(y, x, y);
+    }
+
+    public Vec3d yxz() {
+        return new Vec3d(y, x, z);
+    }
+
+    public Vec3d yyx() {
+        return new Vec3d(y, y, x);
+    }
+
+    public Vec3d yyy() {
+        return new Vec3d(y, y, y);
+    }
+
+    public Vec3d yyz() {
+        return new Vec3d(y, y, z);
+    }
+
+    public Vec3d yzx() {
+        return new Vec3d(y, z, x);
+    }
+
+    public Vec3d yzy() {
+        return new Vec3d(y, z, y);
+    }
+
+    public Vec3d yzz() {
+        return new Vec3d(y, z, z);
+    }
+
+    public Vec3d zxx() {
+        return new Vec3d(z, x, x);
+    }
+
+    public Vec3d zxy() {
+        return new Vec3d(z, x, y);
+    }
+
+    public Vec3d zxz() {
+        return new Vec3d(z, x, z);
+    }
+
+    public Vec3d zyx() {
+        return new Vec3d(z, y, x);
+    }
+
+    public Vec3d zyy() {
+        return new Vec3d(z, y, y);
+    }
+
+    public Vec3d zyz() {
+        return new Vec3d(z, y, z);
+    }
+
+    public Vec3d zzx() {
+        return new Vec3d(z, z, x);
+    }
+
+    public Vec3d zzy() {
+        return new Vec3d(z, z, y);
+    }
+
+    public Vec3d zzz() {
+        return new Vec3d(z, z, z);
+    }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Vec3d vec3d = (Vec3d) o;
-        return Double.compare(vec3d.x, x) == 0 && Double.compare(vec3d.y, y) == 0 && Double.compare(vec3d.z, z) == 0;
+        return Double.compare(vec3d.x, x) == 0
+                && Double.compare(vec3d.y, y) == 0
+                && Double.compare(vec3d.z, z) == 0;
     }
 
     @Override

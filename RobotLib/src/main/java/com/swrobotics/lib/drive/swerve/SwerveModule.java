@@ -66,20 +66,22 @@ public class SwerveModule {
         // Wait to spread out CAN usage during initialization
         try {
             Thread.sleep(500);
-        } catch (InterruptedException e) {}
+        } catch (InterruptedException e) {
+        }
 
         calibrateWithAbsoluteEncoder();
         setState(new SwerveModuleState());
 
         // Wait again
         try {
-        Thread.sleep(500);
-        } catch (InterruptedException e) {}
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+        }
     }
 
     /**
      * Returns the maximum velocity in meters per second
-     * 
+     *
      * @return Max velocity in meters per second
      */
     public double getMaxVelocity() {
@@ -144,9 +146,9 @@ public class SwerveModule {
      * @return current angle
      */
     public Rotation2d getAngle() {
-//        if (RobotBase.isSimulation()) {
-//            return targetState.angle;
-//        }
+        //        if (RobotBase.isSimulation()) {
+        //            return targetState.angle;
+        //        }
 
         return fromNativeTurnUnits(turnEncoder.getAngle());
     }
@@ -171,7 +173,9 @@ public class SwerveModule {
     }
 
     public void calibrateOffset() {
-        offset.set(CCWAngle.deg(encoder.getAngle().ccw().deg() + positionalOffset)); // No offset applied
+        offset.set(
+                CCWAngle.deg(
+                        encoder.getAngle().ccw().deg() + positionalOffset)); // No offset applied
     }
 
     private void calibrateWithAbsoluteEncoder() {

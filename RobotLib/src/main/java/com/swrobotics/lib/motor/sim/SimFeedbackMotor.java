@@ -12,13 +12,22 @@ public class SimFeedbackMotor extends SimMotor implements FeedbackMotor {
     private final SimPositionPIDCtrl positionCtrl;
     private final SimVelocityPIDCtrl velocityCtrl;
 
-    public SimFeedbackMotor(MotorType type, double pidCalcInterval, double pidOutputScale, double controllerSensorUnitsPerRot, double controllerSensorUnitsPerRPS) {
+    public SimFeedbackMotor(
+            MotorType type,
+            double pidCalcInterval,
+            double pidOutputScale,
+            double controllerSensorUnitsPerRot,
+            double controllerSensorUnitsPerRPS) {
         super(type);
         this.encoder = new SimEncoder(() -> rawAngle.mul(flip));
 
         pid = new SimPIDController(pidCalcInterval, pidOutputScale);
-        positionCtrl = new SimPositionPIDCtrl(pid, encoder, type.sensorUnitsPerRot * controllerSensorUnitsPerRot);
-        velocityCtrl = new SimVelocityPIDCtrl(pid, encoder, type.sensorUnitsPerRPS * controllerSensorUnitsPerRPS);
+        positionCtrl =
+                new SimPositionPIDCtrl(
+                        pid, encoder, type.sensorUnitsPerRot * controllerSensorUnitsPerRot);
+        velocityCtrl =
+                new SimVelocityPIDCtrl(
+                        pid, encoder, type.sensorUnitsPerRPS * controllerSensorUnitsPerRPS);
     }
 
     @Override
