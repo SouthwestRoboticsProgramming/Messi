@@ -145,7 +145,7 @@ public final class ArmSubsystem extends SwitchableSubsystemBase {
                 new Vec2d(
                         0,
                         0); // Should not be accessed until first target set, so this value doesn't
-                            // matter
+        // matter
         needResetPID = false;
 
         ARM_BRAKE_MODE.nowAndOnChange(
@@ -164,9 +164,8 @@ public final class ArmSubsystem extends SwitchableSubsystemBase {
         Angle topAngle = top.getCurrentAngle();
         Angle wristAngle =
                 wrist.getCurrentAngle()
-                        .add(
-                                topAngle); // Convert from relative to top segment to relative to
-                                           // horizontal
+                        .add(topAngle); // Convert from relative to top segment to relative to
+        // horizontal
         return new ArmPose(bottomAngle, topAngle, wristAngle);
     }
 

@@ -233,8 +233,7 @@ public abstract class Drivetrain extends SwitchableSubsystemBase {
 
     // Loads path from deployed file
     private static List<PathPlannerTrajectory> getPath(String name, PathConstraints constraints) {
-        List<PathPlannerTrajectory> path =
-                PathPlanner.loadPathGroup(name, constraints);
+        List<PathPlannerTrajectory> path = PathPlanner.loadPathGroup(name, constraints);
         if (path != null) {
             return path;
         }

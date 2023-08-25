@@ -15,9 +15,8 @@ public class Settings {
             case SIMULATION:
                 return RobotBase.isReal()
                         ? Mode.REAL
-                        : Mode
-                                .SIMULATION; // Make sure we didn't accedentally leave it on
-                                             // simulation
+                        : Mode.SIMULATION; // Make sure we didn't accedentally leave it on
+                // simulation
             default:
                 return Mode.REAL;
         }
