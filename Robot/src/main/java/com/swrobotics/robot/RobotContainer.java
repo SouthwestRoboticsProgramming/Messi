@@ -121,7 +121,8 @@ public class RobotContainer {
 
         // Autos to just drive off the line
         Command taxiSmart =
-                swerveDrive.buildPathPlannerAuto("Taxi Auto", pathConstraints); // Drive forward and reset position
+                swerveDrive.buildPathPlannerAuto(
+                        "Taxi Auto", pathConstraints); // Drive forward and reset position
         Command taxiDumb =
                 new DriveBlindCommand(
                                 swerveDrive,
@@ -132,26 +133,35 @@ public class RobotContainer {
 
         // Autos that just balance
         Command balanceWall = swerveDrive.buildPathPlannerAuto("Balance Wall", pathConstraints);
-        Command balanceBarrier = swerveDrive.buildPathPlannerAuto("Balance Barrier", pathConstraints);
+        Command balanceBarrier =
+                swerveDrive.buildPathPlannerAuto("Balance Barrier", pathConstraints);
         Command balanceClose = new BalanceSequenceCommand(this, false);
 
         // Autos that score and then balance
         Command cubeMidBalance = swerveDrive.buildPathPlannerAuto("Cube Balance", pathConstraints);
         Command coneMidBalance = swerveDrive.buildPathPlannerAuto("Cone Balance", pathConstraints);
-        Command cubeMidWallBalance = swerveDrive.buildPathPlannerAuto("Cube Wall Balance", pathConstraints);
-        Command coneMidWallBalance = swerveDrive.buildPathPlannerAuto("Cone Wall Balance", pathConstraints);
-        Command coneMidBalanceShort = swerveDrive.buildPathPlannerAuto("Cone Short Balance", pathConstraints);
-        Command cubeMidBalanceShort = swerveDrive.buildPathPlannerAuto("Cube Short Balance", pathConstraints);
+        Command cubeMidWallBalance =
+                swerveDrive.buildPathPlannerAuto("Cube Wall Balance", pathConstraints);
+        Command coneMidWallBalance =
+                swerveDrive.buildPathPlannerAuto("Cone Wall Balance", pathConstraints);
+        Command coneMidBalanceShort =
+                swerveDrive.buildPathPlannerAuto("Cone Short Balance", pathConstraints);
+        Command cubeMidBalanceShort =
+                swerveDrive.buildPathPlannerAuto("Cube Short Balance", pathConstraints);
 
         // Advanced taxi autos that prepare us for next cycle
-        Command getOfOfTheWayWall = swerveDrive.buildPathPlannerAuto("Get Out Of The Way Wall", pathConstraints);
+        Command getOfOfTheWayWall =
+                swerveDrive.buildPathPlannerAuto("Get Out Of The Way Wall", pathConstraints);
         Command getOfOfTheWayBarrier =
                 swerveDrive.buildPathPlannerAuto("Get Out Of The Way Barrier", pathConstraints);
 
         // Autos that do no balance but score
-        Command cubeAndRunBarrier = swerveDrive.buildPathPlannerAuto("Cube and Run Barrier", pathConstraints);
-        Command cubeAndRunMid = swerveDrive.buildPathPlannerAuto("Cube and Run Mid", pathConstraints);
-        Command cubeAndRunWall = swerveDrive.buildPathPlannerAuto("Cube and Run Wall", pathConstraints);
+        Command cubeAndRunBarrier =
+                swerveDrive.buildPathPlannerAuto("Cube and Run Barrier", pathConstraints);
+        Command cubeAndRunMid =
+                swerveDrive.buildPathPlannerAuto("Cube and Run Mid", pathConstraints);
+        Command cubeAndRunWall =
+                swerveDrive.buildPathPlannerAuto("Cube and Run Wall", pathConstraints);
 
         // Autos that just do cube or cone mid
 
