@@ -4,7 +4,7 @@ import edu.wpi.first.math.util.Units;
 
 /** Stores the physical attributes of a swerve module. */
 public final class SwerveModuleAttributes {
-    private static final double SDS_WHEEL_DIA = Units.inchesToMeters(4);
+    private static final double SDS_WHEEL_DIA = Units.inchesToMeters(3.85);
 
     private static final double L1_DRIVE_RATIO = 8.14;
     private static final double L2_DRIVE_RATIO = 6.75;
@@ -12,7 +12,7 @@ public final class SwerveModuleAttributes {
     private static final double L4_DRIVE_RATIO = 5.14;
 
     private static final double MK4_TURN_RATIO = 12.8;
-    private static final double MK4I_TURN_RATIO = 150.0 / 7;
+    private static final double MK4I_TURN_RATIO = 150.0 / 7.0;
 
     public static final SwerveModuleAttributes SDS_MK4_L1 =
             new SwerveModuleAttributes(
