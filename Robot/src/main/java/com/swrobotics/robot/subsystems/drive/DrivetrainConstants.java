@@ -7,7 +7,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 
 public final class DrivetrainConstants {
-    public static final double DRIVETRAIN_TRACKWIDTH_METERS = Units.inchesToMeters(25 - 3 * 2);
+    public static final double DRIVETRAIN_TRACKWIDTH_METERS = Units.inchesToMeters(21 - 2.625 * 2);
     public static final double DRIVETRAIN_WHEELBASE_METERS = DRIVETRAIN_TRACKWIDTH_METERS;
 
     public static final Translation2d FRONT_LEFT_POSITION =
