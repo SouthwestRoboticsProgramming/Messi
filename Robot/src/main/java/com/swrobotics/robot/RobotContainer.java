@@ -1,5 +1,6 @@
 package com.swrobotics.robot;
 
+import com.pathplanner.lib.PathConstraints;
 import com.swrobotics.lib.drive.swerve.commands.DriveBlindCommand;
 import com.swrobotics.lib.gyro.PigeonGyroscope;
 import com.swrobotics.mathlib.CCWAngle;
@@ -38,8 +39,6 @@ import java.util.function.Supplier;
  */
 public class RobotContainer {
     // TODO: Endgame alert with rumble
-    // TODO: Coast on decceleration
-    // TODO: Characterization mode
 
     // Configuration for our Raspberry Pi communication service
     private static final String MESSENGER_HOST_ROBOT = "10.21.29.3";
@@ -118,9 +117,11 @@ public class RobotContainer {
         // Autos that don't do anything
         Command blankAuto = new InstantCommand();
 
+        PathConstraints pathConstraints = new PathConstraints(4.0, 1.0);
+
         // Autos to just drive off the line
         Command taxiSmart =
-                swerveDrive.buildPathPlannerAuto("Taxi Auto"); // Drive forward and reset position
+                swerveDrive.buildPathPlannerAuto("Taxi Auto", pathConstraints); // Drive forward and reset position
         Command taxiDumb =
                 new DriveBlindCommand(
                                 swerveDrive,
@@ -130,27 +131,27 @@ public class RobotContainer {
                         .withTimeout(2.0); // Just drive forward
 
         // Autos that just balance
-        Command balanceWall = swerveDrive.buildPathPlannerAuto("Balance Wall");
-        Command balanceBarrier = swerveDrive.buildPathPlannerAuto("Balance Barrier");
+        Command balanceWall = swerveDrive.buildPathPlannerAuto("Balance Wall", pathConstraints);
+        Command balanceBarrier = swerveDrive.buildPathPlannerAuto("Balance Barrier", pathConstraints);
         Command balanceClose = new BalanceSequenceCommand(this, false);
 
         // Autos that score and then balance
-        Command cubeMidBalance = swerveDrive.buildPathPlannerAuto("Cube Balance");
-        Command coneMidBalance = swerveDrive.buildPathPlannerAuto("Cone Balance");
-        Command cubeMidWallBalance = swerveDrive.buildPathPlannerAuto("Cube Wall Balance");
-        Command coneMidWallBalance = swerveDrive.buildPathPlannerAuto("Cone Wall Balance");
-        Command coneMidBalanceShort = swerveDrive.buildPathPlannerAuto("Cone Short Balance");
-        Command cubeMidBalanceShort = swerveDrive.buildPathPlannerAuto("Cube Short Balance");
+        Command cubeMidBalance = swerveDrive.buildPathPlannerAuto("Cube Balance", pathConstraints);
+        Command coneMidBalance = swerveDrive.buildPathPlannerAuto("Cone Balance", pathConstraints);
+        Command cubeMidWallBalance = swerveDrive.buildPathPlannerAuto("Cube Wall Balance", pathConstraints);
+        Command coneMidWallBalance = swerveDrive.buildPathPlannerAuto("Cone Wall Balance", pathConstraints);
+        Command coneMidBalanceShort = swerveDrive.buildPathPlannerAuto("Cone Short Balance", pathConstraints);
+        Command cubeMidBalanceShort = swerveDrive.buildPathPlannerAuto("Cube Short Balance", pathConstraints);
 
         // Advanced taxi autos that prepare us for next cycle
-        Command getOfOfTheWayWall = swerveDrive.buildPathPlannerAuto("Get Out Of The Way Wall");
+        Command getOfOfTheWayWall = swerveDrive.buildPathPlannerAuto("Get Out Of The Way Wall", pathConstraints);
         Command getOfOfTheWayBarrier =
-                swerveDrive.buildPathPlannerAuto("Get Out Of The Way Barrier");
+                swerveDrive.buildPathPlannerAuto("Get Out Of The Way Barrier", pathConstraints);
 
         // Autos that do no balance but score
-        Command cubeAndRunBarrier = swerveDrive.buildPathPlannerAuto("Cube and Run Barrier");
-        Command cubeAndRunMid = swerveDrive.buildPathPlannerAuto("Cube and Run Mid");
-        Command cubeAndRunWall = swerveDrive.buildPathPlannerAuto("Cube and Run Wall");
+        Command cubeAndRunBarrier = swerveDrive.buildPathPlannerAuto("Cube and Run Barrier", pathConstraints);
+        Command cubeAndRunMid = swerveDrive.buildPathPlannerAuto("Cube and Run Mid", pathConstraints);
+        Command cubeAndRunWall = swerveDrive.buildPathPlannerAuto("Cube and Run Wall", pathConstraints);
 
         // Autos that just do cube or cone mid
 
