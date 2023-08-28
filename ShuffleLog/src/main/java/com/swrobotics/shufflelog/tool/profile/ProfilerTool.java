@@ -1,7 +1,7 @@
 package com.swrobotics.shufflelog.tool.profile;
 
-import com.swrobotics.profiler.MemoryStats;
-import com.swrobotics.profiler.ProfileNode;
+import com.swrobotics.shufflelog.profiler.MemoryStats;
+import com.swrobotics.shufflelog.profiler.ProfileNode;
 import com.swrobotics.shufflelog.ShuffleLog;
 import com.swrobotics.shufflelog.tool.Tool;
 import com.swrobotics.shufflelog.tool.data.DoubleDataPlot;

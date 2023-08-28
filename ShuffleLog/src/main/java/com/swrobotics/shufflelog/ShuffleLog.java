@@ -1,7 +1,7 @@
 package com.swrobotics.shufflelog;
 
 import com.swrobotics.messenger.client.MessengerClient;
-import com.swrobotics.profiler.Profiler;
+import com.swrobotics.shufflelog.profiler.Profiler;
 import com.swrobotics.shufflelog.tool.ConeOrCubeTool;
 import com.swrobotics.shufflelog.tool.MenuBarTool;
 import com.swrobotics.shufflelog.tool.PreMatchChecklistTool;

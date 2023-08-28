@@ -1,4 +1,4 @@
-package com.swrobotics.profiler;
+package com.swrobotics.shufflelog.profiler;
 
 /** A tool to measure how long each part of the code takes to run. */
 public final class Profiler {

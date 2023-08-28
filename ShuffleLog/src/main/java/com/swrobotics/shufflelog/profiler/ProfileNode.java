@@ -1,4 +1,4 @@
-package com.swrobotics.profiler;
+package com.swrobotics.shufflelog.profiler;
 
 import java.util.ArrayList;
 import java.util.List;

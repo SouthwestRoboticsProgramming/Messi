@@ -1,4 +1,4 @@
-package com.swrobotics.profiler;
+package com.swrobotics.shufflelog.profiler;
 
 public final class MemoryStats {
     public static final long BYTES_PER_MB = 1024 * 1024;

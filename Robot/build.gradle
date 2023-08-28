@@ -72,7 +72,6 @@ test {
 dependencies {
     implementation project(':Messenger:MessengerClient')
     implementation project(':TaskManager:TaskManager-FileSystem')
-    implementation project(':Profiler')
     implementation project(':MathLib')
     implementation project(':RobotLib')
 
@@ -116,7 +115,6 @@ wpi.sim.addDriverstation()
 jar {
     dependsOn ':Messenger:MessengerClient:jar'
     dependsOn ':TaskManager:TaskManager-FileSystem:jar'
-    dependsOn ':Profiler:jar'
     dependsOn ':MathLib:jar'
     dependsOn ':RobotLib:jar'
 

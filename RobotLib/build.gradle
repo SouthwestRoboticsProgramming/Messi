@@ -14,7 +14,6 @@ compileJava {
 dependencies {
     api project(':Messenger:MessengerClient')
     api project(':TaskManager:TaskManager-FileSystem')
-    api project(':Profiler')
     api project(':MathLib')
 
     implementation 'com.google.code.gson:gson:2.9.0'
@@ -26,7 +25,6 @@ dependencies {
 jar {
     dependsOn ':Messenger:MessengerClient:jar'
     dependsOn ':TaskManager:TaskManager-FileSystem:jar'
-    dependsOn ':Profiler:jar'
     dependsOn ':MathLib:jar'
 
     from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
