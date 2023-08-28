@@ -11,7 +11,9 @@ public interface FeedbackMotor extends Motor {
      *
      * @param position target position
      */
-    void setPosition(Angle position);
+    default void setPosition(Angle position) {
+        setPositionArbFF(position, 0);
+    }
 
     /**
      * Sets the target position and adds an arbitrary feedforward percentage.
@@ -26,13 +28,19 @@ public interface FeedbackMotor extends Motor {
      *
      * @param velocity velocity in angle per second
      */
-    void setVelocity(Angle velocity);
+    default void setVelocity(Angle velocity) {
+        setVelocityArbFF(velocity, 0);
+    }
+
+    /**
+     * Sets the target velocity and adds an arbitrary feedforward percentage.
+     *
+     * @param velocity target velocity in angle per second
+     * @param arbFF arbitrary added feedforward percentage (-1 to 1)
+     */
+    void setVelocityArbFF(Angle velocity, double arbFF);
 
     Encoder getIntegratedEncoder();
-
-    default void useExternalEncoder(Encoder encoder) {
-        throw new UnsupportedOperationException();
-    }
 
     void resetIntegrator();
 
@@ -65,7 +73,11 @@ public interface FeedbackMotor extends Motor {
         setF(kF);
     }
 
-    default void setPIDF(NTPrimitive<Double> kP, NTPrimitive<Double> kI, NTPrimitive<Double> kD, NTPrimitive<Double> kF) {
+    default void setPIDF(
+            NTPrimitive<Double> kP,
+            NTPrimitive<Double> kI,
+            NTPrimitive<Double> kD,
+            NTPrimitive<Double> kF) {
         setPID(kP, kI, kD);
         kF.nowAndOnChange(this::setF);
     }

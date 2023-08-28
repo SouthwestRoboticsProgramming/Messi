@@ -1,8 +1,7 @@
 package com.swrobotics.robot.config;
 
 /**
- * Class to define all CAN IDs in one place, so it is easy to verify all the
- * IDs are set correctly
+ * Class to define all CAN IDs in one place, so it is easy to verify all the IDs are set correctly
  */
 public final class CANAllocation {
     public static final SwerveIds SWERVE_FL = new SwerveIds(9, 5, 1);

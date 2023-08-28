@@ -43,10 +43,13 @@ public final class ArmPose {
 
     @Override
     public String toString() {
-        return "ArmPose{" +
-                "bottomAngle=" + bottomAngle +
-                ", topAngle=" + topAngle +
-                ", wristAngle=" + wristAngle +
-                '}';
+        return "ArmPose{"
+                + "bottomAngle="
+                + bottomAngle
+                + ", topAngle="
+                + topAngle
+                + ", wristAngle="
+                + wristAngle
+                + '}';
     }
 }

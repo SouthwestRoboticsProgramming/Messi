@@ -232,9 +232,8 @@ public abstract class Drivetrain extends SwitchableSubsystemBase {
     protected abstract BaseAutoBuilder createAutoBuilder(Map<String, Command> eventMap);
 
     // Loads path from deployed file
-    private static List<PathPlannerTrajectory> getPath(String name) {
-        List<PathPlannerTrajectory> path =
-                PathPlanner.loadPathGroup(name, new PathConstraints(2.0, 0.8));
+    private static List<PathPlannerTrajectory> getPath(String name, PathConstraints constraints) {
+        List<PathPlannerTrajectory> path = PathPlanner.loadPathGroup(name, constraints);
         if (path != null) {
             return path;
         }
@@ -261,14 +260,14 @@ public abstract class Drivetrain extends SwitchableSubsystemBase {
      * @param name name of the path file to load
      * @return autonomous command
      */
-    public CommandBase buildPathPlannerAuto(String name) {
+    public CommandBase buildPathPlannerAuto(String name, PathConstraints constraints) {
         if (autoBuilder == null) {
             autoBuilder = createAutoBuilder(autoEventMap);
         }
 
         return new SequentialCommandGroup(
                         new InstantCommand(this::onPathPlannerStart),
-                        autoBuilder.fullAuto(getPath(name)) // Run the path
+                        autoBuilder.fullAuto(getPath(name, constraints)) // Run the path
                         )
                 .finallyDo((cancelled) -> onPathPlannerEnd());
     }

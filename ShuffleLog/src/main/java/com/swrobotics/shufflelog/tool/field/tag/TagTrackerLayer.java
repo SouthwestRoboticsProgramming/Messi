@@ -63,8 +63,9 @@ public final class TagTrackerLayer implements FieldLayer {
                 });
 
         // TODO: This should come from the tag tracker estimate
-        robotPose = new RobotPose(
-                new Vector3f(1, 1, 1), new Matrix4f().translate(new Vector3f(0, -4, 0)));
+        robotPose =
+                new RobotPose(
+                        new Vector3f(1, 1, 1), new Matrix4f().translate(new Vector3f(0, -4, 0)));
 
         msg.addHandler(
                 "TagTracker:TestMtx",
@@ -84,8 +85,7 @@ public final class TagTrackerLayer implements FieldLayer {
 
     private Matrix4f readMatrix(MessageReader reader) {
         float[] data = new float[16];
-        for (int i = 0; i < data.length; i++)
-            data[i] = reader.readFloat();
+        for (int i = 0; i < data.length; i++) data[i] = reader.readFloat();
         return Matrix4f.fromColumnMajor(data);
     }
 
@@ -124,14 +124,11 @@ public final class TagTrackerLayer implements FieldLayer {
 
     @Override
     public void draw(PGraphics g) {
-        if (!msg.isConnected())
-            return;
+        if (!msg.isConnected()) return;
 
-        if (!hasEnvironment && queryEnvironmentCooldown.request())
-            msg.send(MSG_QUERY_ENVIRONMENT);
+        if (!hasEnvironment && queryEnvironmentCooldown.request()) msg.send(MSG_QUERY_ENVIRONMENT);
 
-        if (!showTags.get())
-            return;
+        if (!showTags.get()) return;
 
         g.stroke(0, 255, 0);
         g.strokeWeight(4);

@@ -1,7 +1,8 @@
 package com.swrobotics.lib.motor;
 
 /**
- * Abstraction for a motor.
+ * Abstraction for a motor. This contains the basic functionality every motor controller should
+ * provide.
  *
  * <p>Clockwise and counterclockwise are from the perspective of looking at the face of the motor,
  * with the shaft toward you.
@@ -34,15 +35,4 @@ public interface Motor {
      * @param brake whether to enable brake mode
      */
     default void setBrakeMode(boolean brake) {}
-
-    /**
-     * Sets this motor to follow the output of another motor. If this motor is not able to follow
-     * the given motor, it will throw an UnsupportedOperationException. The following can be
-     * inverted using {@link #setInverted(boolean)}.
-     *
-     * @param leader motor to follow
-     */
-    default void follow(Motor leader) {
-        throw new UnsupportedOperationException();
-    }
 }

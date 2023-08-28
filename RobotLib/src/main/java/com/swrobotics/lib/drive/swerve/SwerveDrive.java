@@ -95,8 +95,7 @@ public class SwerveDrive extends Drivetrain {
             }
 
             for (int i = 0; i < states.length; i++) {
-                states[i] =
-                        new SwerveModuleState(0, stopPosition.getForModule(modules[i]));
+                states[i] = new SwerveModuleState(0, stopPosition.getForModule(modules[i]));
             }
         }
 
@@ -167,12 +166,12 @@ public class SwerveDrive extends Drivetrain {
                 SwerveDrive.this::getOdometryPose, // Pose2d supplier
                 SwerveDrive.this
                         ::resetPoseInternal, // Pose2d consumer, used to reset odometry at the
-                                             // beginning of auto
+                // beginning of auto
                 kinematics, // SwerveDriveKinematics
                 new PIDConstants(
                         0.0, 0.0,
                         0.0), // PID constants to correct for translation error (used to create the
-                              // X
+                // X
                 // and Y PID controllers)
                 new PIDConstants(
                         2.0, 0.0,
@@ -180,12 +179,12 @@ public class SwerveDrive extends Drivetrain {
                 // rotation controller)
                 SwerveDrive.this
                         ::cheatChassisSpeeds, // Module states consumer used to output to the drive
-                                              // subsystem
+                // subsystem
                 eventMap,
                 fieldInfo.getSymmetry() == FieldSymmetry.LATERAL,
                 SwerveDrive
                         .this // The drive subsystem. Used to properly set the requirements of path
-                              // following
+                // following
                 // commands
                 );
     }

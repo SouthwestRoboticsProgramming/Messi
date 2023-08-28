@@ -12,8 +12,7 @@ public class SwerveModuleInfo {
     public final int encoderID;
     public final NTEntry<Angle> offset;
 
-    public SwerveModuleInfo(
-            String name, CANAllocation.SwerveIds ids, NTEntry<Angle> offset) {
+    public SwerveModuleInfo(String name, CANAllocation.SwerveIds ids, NTEntry<Angle> offset) {
         this.name = name;
         this.driveMotorID = ids.drive;
         this.turnMotorID = ids.turn;

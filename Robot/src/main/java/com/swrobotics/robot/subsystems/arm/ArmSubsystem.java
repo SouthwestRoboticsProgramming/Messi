@@ -1,5 +1,9 @@
 package com.swrobotics.robot.subsystems.arm;
 
+import static com.swrobotics.robot.config.NTData.*;
+import static com.swrobotics.robot.subsystems.arm.ArmConstants.*;
+
+import com.swrobotics.lib.motor.MotorType;
 import com.swrobotics.lib.net.*;
 import com.swrobotics.lib.schedule.SwitchableSubsystemBase;
 import com.swrobotics.mathlib.Angle;
@@ -9,17 +13,16 @@ import com.swrobotics.messenger.client.MessengerClient;
 import com.swrobotics.robot.config.CANAllocation;
 import com.swrobotics.robot.subsystems.intake.GamePiece;
 import com.swrobotics.robot.subsystems.intake.IntakeSubsystem;
+
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
+
 import org.littletonrobotics.junction.Logger;
 
 import java.util.List;
-
-import static com.swrobotics.robot.subsystems.arm.ArmConstants.*;
-import static com.swrobotics.robot.config.NTData.*;
 
 // CanCoder calibration procedure:
 // 1. Disable the robot
@@ -30,7 +33,8 @@ import static com.swrobotics.robot.config.NTData.*;
 // 6. Set Arm/Brake Mode to true
 // 6. Restart robot code to use the new offsets
 public final class ArmSubsystem extends SwitchableSubsystemBase {
-    private static final NTPrimitive<Boolean> CALIBRATE_CANCODERS = new NTBoolean("Arm/Offsets/Calibrate", false);
+    private static final NTPrimitive<Boolean> CALIBRATE_CANCODERS =
+            new NTBoolean("Arm/Offsets/Calibrate", false);
 
     private final IntakeSubsystem intake;
     private final ArmJoint bottom, top;
@@ -49,44 +53,107 @@ public final class ArmSubsystem extends SwitchableSubsystemBase {
     public ArmSubsystem(MessengerClient msg, IntakeSubsystem intake) {
         this.intake = intake;
 
-        bottom = new ArmJoint(CANAllocation.ARM_BOTTOM_MOTOR, CANAllocation.ARM_BOTTOM_CANCODER, CANCODER_TO_ARM_RATIO, BOTTOM_GEAR_RATIO, ARM_BOTTOM_OFFSET, true);
-        top = new ArmJoint(CANAllocation.ARM_TOP_MOTOR, CANAllocation.ARM_TOP_CANCODER, CANCODER_TO_ARM_RATIO, TOP_GEAR_RATIO, ARM_TOP_OFFSET, false);
-        wrist = new WristJoint(CANAllocation.ARM_WRIST_MOTOR, CANAllocation.ARM_WRIST_CANCODER, WRIST_CANCODER_TO_ARM_RATIO, WRIST_GEAR_RATIO, ARM_WRIST_OFFSET, false);
+        bottom =
+                new ArmJoint(
+                        CANAllocation.ARM_BOTTOM_MOTOR,
+                        MotorType.NEO,
+                        CANAllocation.ARM_BOTTOM_CANCODER,
+                        CANCODER_TO_ARM_RATIO,
+                        BOTTOM_GEAR_RATIO,
+                        ARM_BOTTOM_OFFSET,
+                        true);
+        top =
+                new ArmJoint(
+                        CANAllocation.ARM_TOP_MOTOR,
+                        MotorType.NEO,
+                        CANAllocation.ARM_TOP_CANCODER,
+                        CANCODER_TO_ARM_RATIO,
+                        TOP_GEAR_RATIO,
+                        ARM_TOP_OFFSET,
+                        false);
+        wrist =
+                new WristJoint(
+                        CANAllocation.ARM_WRIST_MOTOR,
+                        MotorType.NEO_550,
+                        CANAllocation.ARM_WRIST_CANCODER,
+                        WRIST_CANCODER_TO_ARM_RATIO,
+                        WRIST_GEAR_RATIO,
+                        ARM_WRIST_OFFSET,
+                        false);
 
         double size = (BOTTOM_LENGTH + TOP_LENGTH + WRIST_RAD) * 2;
         Mechanism2d visualizer = new Mechanism2d(size, size);
-        targetVisualizer = new ArmVisualizer(size / 2, size / 2, visualizer, "Target", Color.kDarkRed, Color.kRed, Color.kOrangeRed);
-        stepTargetVisualizer = new ArmVisualizer(size / 2, size / 2, visualizer, "Step Target", Color.kDarkOrange, Color.kOrange, Color.kDarkGoldenrod);
-        currentVisualizer = new ArmVisualizer(size / 2, size / 2, visualizer, "Current", Color.kDarkGreen, Color.kGreen, Color.kLightGreen);
+        targetVisualizer =
+                new ArmVisualizer(
+                        size / 2,
+                        size / 2,
+                        visualizer,
+                        "Target",
+                        Color.kDarkRed,
+                        Color.kRed,
+                        Color.kOrangeRed);
+        stepTargetVisualizer =
+                new ArmVisualizer(
+                        size / 2,
+                        size / 2,
+                        visualizer,
+                        "Step Target",
+                        Color.kDarkOrange,
+                        Color.kOrange,
+                        Color.kDarkGoldenrod);
+        currentVisualizer =
+                new ArmVisualizer(
+                        size / 2,
+                        size / 2,
+                        visualizer,
+                        "Current",
+                        Color.kDarkGreen,
+                        Color.kGreen,
+                        Color.kLightGreen);
         SmartDashboard.putData("Arm Visualizer", visualizer);
 
         ArmPose home = ArmPositions.DEFAULT.get().toPose();
         System.out.println("Home pose: " + home);
-        if (home == null)
-            throw new IllegalStateException("Home position must be valid!");
+        if (home == null) throw new IllegalStateException("Home position must be valid!");
         bottom.calibratePosition(home.bottomAngle);
         top.calibratePosition(home.topAngle.ccw().wrapDeg(-270, 90));
         wrist.calibratePosition(home.wristAngle.sub(home.topAngle));
 
         pathfinder = new ArmPathfinder(msg);
-        movePid = new ProfiledPIDController(ARM_MOVE_KP.get(), ARM_MOVE_KI.get(), ARM_MOVE_KD.get(),
-                new TrapezoidProfile.Constraints(ARM_MAX_VELOCITY.get(), ARM_MAX_ACCEL.get()));
+        movePid =
+                new ProfiledPIDController(
+                        ARM_MOVE_KP.get(),
+                        ARM_MOVE_KI.get(),
+                        ARM_MOVE_KD.get(),
+                        new TrapezoidProfile.Constraints(
+                                ARM_MAX_VELOCITY.get(), ARM_MAX_ACCEL.get()));
         ARM_MOVE_KP.onChange(movePid::setP);
         ARM_MOVE_KI.onChange(movePid::setI);
         ARM_MOVE_KD.onChange(movePid::setD);
-        ARM_MAX_VELOCITY.onChange((vel) -> movePid.setConstraints(new TrapezoidProfile.Constraints(vel, ARM_MAX_ACCEL.get())));
-        ARM_MAX_ACCEL.onChange((acc) -> movePid.setConstraints(new TrapezoidProfile.Constraints(ARM_MAX_VELOCITY.get(), acc)));
+        ARM_MAX_VELOCITY.onChange(
+                (vel) ->
+                        movePid.setConstraints(
+                                new TrapezoidProfile.Constraints(vel, ARM_MAX_ACCEL.get())));
+        ARM_MAX_ACCEL.onChange(
+                (acc) ->
+                        movePid.setConstraints(
+                                new TrapezoidProfile.Constraints(ARM_MAX_VELOCITY.get(), acc)));
         targetPose = home;
 
         inToleranceHysteresis = false;
-        prevBiasedStart = new Vec2d(0, 0); // Should not be accessed until first target set, so this value doesn't matter
+        prevBiasedStart =
+                new Vec2d(
+                        0,
+                        0); // Should not be accessed until first target set, so this value doesn't
+        // matter
         needResetPID = false;
 
-        ARM_BRAKE_MODE.nowAndOnChange((brake) -> {
-            bottom.setBrakeMode(brake);
-            top.setBrakeMode(brake);
-            wrist.setBrakeMode(brake);
-        });
+        ARM_BRAKE_MODE.nowAndOnChange(
+                (brake) -> {
+                    bottom.setBrakeMode(brake);
+                    top.setBrakeMode(brake);
+                    wrist.setBrakeMode(brake);
+                });
 
         wristFold = ARM_FOLD_ANGLE_CUBE;
         folded = prevEnterFold = prevExitFold = true; // Always folded; we start inside robot
@@ -95,7 +162,10 @@ public final class ArmSubsystem extends SwitchableSubsystemBase {
     public ArmPose getCurrentPose() {
         Angle bottomAngle = bottom.getCurrentAngle();
         Angle topAngle = top.getCurrentAngle();
-        Angle wristAngle = wrist.getCurrentAngle().add(topAngle); // Convert from relative to top segment to relative to horizontal
+        Angle wristAngle =
+                wrist.getCurrentAngle()
+                        .add(topAngle); // Convert from relative to top segment to relative to
+        // horizontal
         return new ArmPose(bottomAngle, topAngle, wristAngle);
     }
 
@@ -153,12 +223,14 @@ public final class ArmSubsystem extends SwitchableSubsystemBase {
 
                 if (dist < minDist) {
                     // Target the segment's endpoint
-                    currentTarget = new ArmPose(pose.bottomAngle, pose.topAngle, targetPose.wristAngle);
+                    currentTarget =
+                            new ArmPose(pose.bottomAngle, pose.topAngle, targetPose.wristAngle);
                     minDist = dist;
                 }
             }
 
-            // This should never happen, since the path should always have at least two points (start, goal)
+            // This should never happen, since the path should always have at least two points
+            // (start, goal)
             if (currentTarget == null) {
                 onDisable();
                 return;
@@ -167,9 +239,11 @@ public final class ArmSubsystem extends SwitchableSubsystemBase {
         stepTargetVisualizer.setPose(currentTarget);
 
         // Find a vector to the current intermediate step in non-biased state space
-        double topAngle = MathUtil.wrap(currentTarget.topAngle.ccw().rad(), -1.5 * Math.PI, 0.5 * Math.PI);
-        Vec2d towardsTarget = new Vec2d(currentTarget.bottomAngle.ccw().rad(), topAngle)
-                .sub(currentPose.bottomAngle.ccw().rad(), currentPose.topAngle.ccw().rad());
+        double topAngle =
+                MathUtil.wrap(currentTarget.topAngle.ccw().rad(), -1.5 * Math.PI, 0.5 * Math.PI);
+        Vec2d towardsTarget =
+                new Vec2d(currentTarget.bottomAngle.ccw().rad(), topAngle)
+                        .sub(currentPose.bottomAngle.ccw().rad(), currentPose.topAngle.ccw().rad());
 
         // Tolerance hysteresis so the motor doesn't do the shaky shaky
         double magToFinalTarget = new Vec2d(biasedTarget).sub(biasedStart).magnitude();
@@ -211,7 +285,8 @@ public final class ArmSubsystem extends SwitchableSubsystemBase {
         // Apply bias to towardsTarget so that each axis takes equal time
         // This allows the assumption in the pathfinder that moving towards
         // a target travels in a straight line in state space
-        towardsTarget.mul(ArmConstants.BOTTOM_GEAR_RATIO, ArmConstants.TOP_GEAR_RATIO)
+        towardsTarget
+                .mul(ArmConstants.BOTTOM_GEAR_RATIO, ArmConstants.TOP_GEAR_RATIO)
                 .boxNormalize()
                 .mul(pidOut);
 
@@ -229,17 +304,16 @@ public final class ArmSubsystem extends SwitchableSubsystemBase {
         Vec2d axisPos = currentPose.getAxisPos().absolute();
         Angle wristTarget = targetPose.wristAngle;
         Angle wristRef = targetPose.topAngle;
-        NTEntry<Angle> foldAngle = intake.getHeldPiece() == GamePiece.CUBE ? ARM_FOLD_ANGLE_CUBE : ARM_FOLD_ANGLE_CONE;
+        NTEntry<Angle> foldAngle =
+                intake.getHeldPiece() == GamePiece.CUBE ? ARM_FOLD_ANGLE_CUBE : ARM_FOLD_ANGLE_CONE;
 
         // When entering ZONE_ENTER, fold = true
         // When leaving ZONE_EXIT, fold = false
         // Also when in ZONE_EXIT, in case arm never left ZONE_ENTER
         boolean inEnter = inZone(ARM_FOLD_ZONE_ENTER.get(), axisPos);
         boolean inExit = inZone(ARM_FOLD_ZONE_EXIT.get(), axisPos);
-        if ((inEnter && !prevEnterFold) || inExit)
-            folded = true;
-        if (!inExit && prevExitFold)
-            folded = false;
+        if ((inEnter && !prevEnterFold) || inExit) folded = true;
+        if (!inExit && prevExitFold) folded = false;
         prevEnterFold = inEnter;
         prevExitFold = inExit;
 
@@ -258,7 +332,8 @@ public final class ArmSubsystem extends SwitchableSubsystemBase {
             wristFold = foldAngle;
         }
         Logger.getInstance().recordOutput("Wrist/Abs Target (ccw deg)", wristTarget.ccw().deg());
-        Logger.getInstance().recordOutput("Wrist/Abs Current (ccw deg)", currentPose.wristAngle.ccw().deg());
+        Logger.getInstance()
+                .recordOutput("Wrist/Abs Current (ccw deg)", currentPose.wristAngle.ccw().deg());
 
         // Calculate the feedforward needed to counteract gravity on the wrist
         double wristFF = wristTarget.ccw().sin() * ARM_WRIST_FULL_HOLD.get();
@@ -280,13 +355,18 @@ public final class ArmSubsystem extends SwitchableSubsystemBase {
             System.err.println("Trying to set arm to invalid position");
             return;
         }
-        if (Double.isNaN(pose.bottomAngle.ccw().deg()) || Double.isNaN(pose.topAngle.ccw().deg()) || Double.isNaN(pose.wristAngle.ccw().deg())) {
+        if (Double.isNaN(pose.bottomAngle.ccw().deg())
+                || Double.isNaN(pose.topAngle.ccw().deg())
+                || Double.isNaN(pose.wristAngle.ccw().deg())) {
             throw new RuntimeException("Target pose is NaN somehow");
         }
 
         // If bottom or top joint target changed, we need to reset PID
-        needResetPID |= !MathUtil.fuzzyEquals(pose.bottomAngle.ccw().rad(), targetPose.bottomAngle.ccw().rad());
-        needResetPID |= !MathUtil.fuzzyEquals(pose.topAngle.ccw().rad(), targetPose.topAngle.ccw().rad());
+        needResetPID |=
+                !MathUtil.fuzzyEquals(
+                        pose.bottomAngle.ccw().rad(), targetPose.bottomAngle.ccw().rad());
+        needResetPID |=
+                !MathUtil.fuzzyEquals(pose.topAngle.ccw().rad(), targetPose.topAngle.ccw().rad());
 
         targetPose = pose;
     }

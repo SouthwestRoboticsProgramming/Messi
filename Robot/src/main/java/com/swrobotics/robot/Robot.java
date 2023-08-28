@@ -1,12 +1,18 @@
 package com.swrobotics.robot;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
-import java.util.function.BiConsumer;
-
 import com.swrobotics.lib.ThreadUtils;
 import com.swrobotics.robot.config.Settings;
+import com.swrobotics.robot.config.Settings.Mode;
+import com.swrobotics.robot.config.Settings.RobotType;
+
+import edu.wpi.first.hal.AllianceStationID;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
+import edu.wpi.first.wpilibj.Threads;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.simulation.DriverStationSim;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
@@ -15,16 +21,10 @@ import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
-import com.swrobotics.robot.config.Settings.RobotType;
-import com.swrobotics.robot.config.Settings.Mode;
-
-import edu.wpi.first.hal.AllianceStationID;
-import edu.wpi.first.wpilibj.Threads;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
-import edu.wpi.first.wpilibj.simulation.DriverStationSim;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
+import java.util.function.BiConsumer;
 
 public class Robot extends LoggedRobot {
     private Command autonomousCommand;
@@ -64,7 +64,8 @@ public class Robot extends LoggedRobot {
                 }
                 logger.addDataReceiver(new NT4Publisher());
                 if (Settings.robot == RobotType.COMPETITION) {
-                    LoggedPowerDistribution.getInstance(50, ModuleType.kAutomatic); // FIXME: Correct ID
+                    LoggedPowerDistribution.getInstance(
+                            50, ModuleType.kAutomatic); // FIXME: Correct ID
                 }
                 break;
 
@@ -88,15 +89,20 @@ public class Robot extends LoggedRobot {
 
         // Log active commands
         Map<String, Integer> commandCounts = new HashMap<>();
-        BiConsumer<Command, Boolean> logCommandFunction = (Command command, Boolean active) -> {
-            String name = command.getName();
-            int count = commandCounts.getOrDefault(name, 0) + (active ? 1 : -1);
-            commandCounts.put(name, count);
-            Logger.getInstance()
-                    .recordOutput(
-                            "CommandsUnique/" + name + "_" + Integer.toHexString(command.hashCode()), active);
-            Logger.getInstance().recordOutput("CommandsAll/" + name, count > 0);
-        };
+        BiConsumer<Command, Boolean> logCommandFunction =
+                (Command command, Boolean active) -> {
+                    String name = command.getName();
+                    int count = commandCounts.getOrDefault(name, 0) + (active ? 1 : -1);
+                    commandCounts.put(name, count);
+                    Logger.getInstance()
+                            .recordOutput(
+                                    "CommandsUnique/"
+                                            + name
+                                            + "_"
+                                            + Integer.toHexString(command.hashCode()),
+                                    active);
+                    Logger.getInstance().recordOutput("CommandsAll/" + name, count > 0);
+                };
         CommandScheduler.getInstance()
                 .onCommandInitialize(
                         (Command command) -> {
@@ -120,7 +126,7 @@ public class Robot extends LoggedRobot {
             }
         }
     }
-    
+
     @Override
     public void robotPeriodic() {
         Threads.setCurrentThreadPriority(true, 99);

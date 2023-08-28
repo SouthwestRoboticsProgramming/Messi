@@ -5,15 +5,13 @@ import com.swrobotics.mathlib.Angle;
 import com.swrobotics.mathlib.CCWAngle;
 import com.swrobotics.mathlib.Vec3d;
 
-/**
- * Gyroscope implementation for the Pigeon2 gyroscope from CTRE.
- */
+/** Gyroscope implementation for the Pigeon2 gyroscope from CTRE. */
 public final class Pigeon2Gyroscope extends Gyroscope {
     private final Pigeon2 pigeon;
 
     /**
-     * Creates a new instance of the Pigeon2 gyroscope with a specific CAN
-     * ID on the RoboRIO CAN bus.
+     * Creates a new instance of the Pigeon2 gyroscope with a specific CAN ID on the RoboRIO CAN
+     * bus.
      *
      * @param canId CAN ID of the Pigeon2
      */
@@ -22,8 +20,8 @@ public final class Pigeon2Gyroscope extends Gyroscope {
     }
 
     /**
-     * Creates a new instance of the Pigeon2 gyroscope with a specified CAN ID
-     * on a specified CAN bus.
+     * Creates a new instance of the Pigeon2 gyroscope with a specified CAN ID on a specified CAN
+     * bus.
      *
      * @param canId CAN ID of the Pigeon2 on the bus
      * @param canBus name of the CAN bus the Pigeon2 is connected to
@@ -42,9 +40,7 @@ public final class Pigeon2Gyroscope extends Gyroscope {
         return CCWAngle.deg(pigeon.getYaw());
     }
 
-    /**
-     * Gets the vector aligned with gravity (i.e. pointing straight down).
-     */
+    /** Gets the vector aligned with gravity (i.e. pointing straight down). */
     public Vec3d getGravityVector() {
         double[] xyz = new double[3];
         pigeon.getGravityVector(xyz);

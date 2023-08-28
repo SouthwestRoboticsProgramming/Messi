@@ -72,8 +72,7 @@ public final class ArmPosition {
     /**
      * Finds a pose that satisfies the constraints specified in this position.
      *
-     * @return optimal pose that satisfies constraints, or null if no such pose
-     *         exists
+     * @return optimal pose that satisfies constraints, or null if no such pose exists
      */
     public ArmPose toPose() {
         double lengthA = ArmConstants.BOTTOM_LENGTH;
@@ -103,8 +102,7 @@ public final class ArmPosition {
                                 / (2 * lengthA * lengthB));
 
         double angle1Rad = targetAngle + flip * angleAL;
-        if (angle1Rad < MIN_BOTTOM_ANGLE || angle1Rad > MAX_BOTTOM_ANGLE)
-            return null;
+        if (angle1Rad < MIN_BOTTOM_ANGLE || angle1Rad > MAX_BOTTOM_ANGLE) return null;
 
         Angle angle1 = CCWAngle.rad(angle1Rad);
         Angle angle2 = angle1.ccw().add(CCWAngle.rad(flip * angleAB - Math.PI)).wrapDeg(-270, 90);
@@ -114,9 +112,6 @@ public final class ArmPosition {
 
     @Override
     public String toString() {
-        return "ArmPosition{" +
-                "axisPos=" + axisPos +
-                ", wristAngle=" + wristAngle +
-                '}';
+        return "ArmPosition{" + "axisPos=" + axisPos + ", wristAngle=" + wristAngle + '}';
     }
 }

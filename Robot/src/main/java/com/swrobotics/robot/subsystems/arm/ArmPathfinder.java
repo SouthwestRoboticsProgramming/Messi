@@ -26,10 +26,7 @@ public final class ArmPathfinder {
 
         @Override
         public String toString() {
-            return "PathPoint{" +
-                    "bottomAngle=" + bottomAngle +
-                    ", topAngle=" + topAngle +
-                    '}';
+            return "PathPoint{" + "bottomAngle=" + bottomAngle + ", topAngle=" + topAngle + '}';
         }
     }
 
@@ -69,8 +66,7 @@ public final class ArmPathfinder {
     }
 
     public boolean isPathValid() {
-        if (path == null || path.isEmpty())
-            return false;
+        if (path == null || path.isEmpty()) return false;
 
         PathPoint lastPoint = path.get(path.size() - 1);
         double diffBot = lastPoint.bottomAngle.ccw().deg() - target.bottomAngle.ccw().deg();

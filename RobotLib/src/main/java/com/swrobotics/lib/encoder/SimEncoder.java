@@ -1,6 +1,7 @@
 package com.swrobotics.lib.encoder;
 
 import com.swrobotics.mathlib.Angle;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;

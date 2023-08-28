@@ -36,7 +36,8 @@ public final class InputDpad implements InputElement {
         right = new InputButton(() -> angleDeg == 225 || angleDeg == 270 || angleDeg == 315);
 
         vertical = new InputAxis(() -> up.isPressed() ? 1.0 : (down.isPressed() ? -1.0 : 0.0), 0);
-        horizontal = new InputAxis(() -> right.isPressed() ? 1.0 : (left.isPressed() ? -1.0 : 0.0), 0);
+        horizontal =
+                new InputAxis(() -> right.isPressed() ? 1.0 : (left.isPressed() ? -1.0 : 0.0), 0);
     }
 
     /**

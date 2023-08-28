@@ -111,9 +111,8 @@ public abstract class AbstractAngle<T extends AbstractAngle<T>> implements Angle
     }
 
     /**
-     * Calculates the absolute value of this angle's measure. The
-     * returned angle will be the same direction as this angle, with
-     * a guaranteed >=0 measure.
+     * Calculates the absolute value of this angle's measure. The returned angle will be the same
+     * direction as this angle, with a guaranteed >=0 measure.
      *
      * @return absolute value
      */
@@ -208,8 +207,8 @@ public abstract class AbstractAngle<T extends AbstractAngle<T>> implements Angle
     }
 
     /**
-     * Calculates the absolute difference between this angle and another.
-     * The returned angle has the same direction as this angle.
+     * Calculates the absolute difference between this angle and another. The returned angle has the
+     * same direction as this angle.
      *
      * @param o other angle
      * @return absolute difference
