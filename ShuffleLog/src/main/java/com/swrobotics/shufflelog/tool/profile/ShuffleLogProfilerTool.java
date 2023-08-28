@@ -1,9 +1,9 @@
 package com.swrobotics.shufflelog.tool.profile;
 
+import com.swrobotics.shufflelog.ShuffleLog;
 import com.swrobotics.shufflelog.profiler.MemoryStats;
 import com.swrobotics.shufflelog.profiler.ProfileNode;
 import com.swrobotics.shufflelog.profiler.Profiler;
-import com.swrobotics.shufflelog.ShuffleLog;
 
 import imgui.ImGui;
 import imgui.flag.ImGuiTableFlags;
