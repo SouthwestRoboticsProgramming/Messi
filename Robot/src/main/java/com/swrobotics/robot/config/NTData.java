@@ -49,7 +49,7 @@ public final class NTData {
                     .setPersistent();
 
     public static final NTEntry<Double> ARM_MOVE_KP =
-            new NTDouble("Arm/Move PID/kP", 0.02).setPersistent();
+            new NTDouble("Arm/Move PID/kP", 0.05).setPersistent();
     public static final NTEntry<Double> ARM_MOVE_KI =
             new NTDouble("Arm/Move PID/kI", 0).setPersistent();
     public static final NTEntry<Double> ARM_MOVE_KD =
