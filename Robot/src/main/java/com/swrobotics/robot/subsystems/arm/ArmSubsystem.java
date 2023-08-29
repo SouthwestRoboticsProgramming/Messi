@@ -15,8 +15,6 @@ import com.swrobotics.robot.subsystems.intake.GamePiece;
 import com.swrobotics.robot.subsystems.intake.IntakeSubsystem;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
@@ -41,7 +39,7 @@ public final class ArmSubsystem extends SwitchableSubsystemBase {
     private final ArmJoint bottom, top;
     private final WristJoint wrist;
     private final ArmPathfinder pathfinder;
-//    private final ProfiledPIDController movePid;
+    //    private final ProfiledPIDController movePid;
     private final PIDController movePid;
     private ArmPose targetPose;
     private boolean inToleranceHysteresis;
@@ -122,29 +120,26 @@ public final class ArmSubsystem extends SwitchableSubsystemBase {
         wrist.calibratePosition(home.wristAngle.sub(home.topAngle));
 
         pathfinder = new ArmPathfinder(msg);
-        movePid =
-                new PIDController(
-                        ARM_MOVE_KP.get(),
-                        ARM_MOVE_KI.get(),
-                        ARM_MOVE_KD.get()
-                );
-//                new ProfiledPIDController(
-//                        ARM_MOVE_KP.get(),
-//                        ARM_MOVE_KI.get(),
-//                        ARM_MOVE_KD.get(),
-//                        new TrapezoidProfile.Constraints(
-//                                ARM_MAX_VELOCITY.get(), ARM_MAX_ACCEL.get()));
+        movePid = new PIDController(ARM_MOVE_KP.get(), ARM_MOVE_KI.get(), ARM_MOVE_KD.get());
+        //                new ProfiledPIDController(
+        //                        ARM_MOVE_KP.get(),
+        //                        ARM_MOVE_KI.get(),
+        //                        ARM_MOVE_KD.get(),
+        //                        new TrapezoidProfile.Constraints(
+        //                                ARM_MAX_VELOCITY.get(), ARM_MAX_ACCEL.get()));
         ARM_MOVE_KP.onChange(movePid::setP);
         ARM_MOVE_KI.onChange(movePid::setI);
         ARM_MOVE_KD.onChange(movePid::setD);
-//        ARM_MAX_VELOCITY.onChange(
-//                (vel) ->
-//                        movePid.setConstraints(
-//                                new TrapezoidProfile.Constraints(vel, ARM_MAX_ACCEL.get())));
-//        ARM_MAX_ACCEL.onChange(
-//                (acc) ->
-//                        movePid.setConstraints(
-//                                new TrapezoidProfile.Constraints(ARM_MAX_VELOCITY.get(), acc)));
+        //        ARM_MAX_VELOCITY.onChange(
+        //                (vel) ->
+        //                        movePid.setConstraints(
+        //                                new TrapezoidProfile.Constraints(vel,
+        // ARM_MAX_ACCEL.get())));
+        //        ARM_MAX_ACCEL.onChange(
+        //                (acc) ->
+        //                        movePid.setConstraints(
+        //                                new TrapezoidProfile.Constraints(ARM_MAX_VELOCITY.get(),
+        // acc)));
         targetPose = home;
 
         inToleranceHysteresis = false;
@@ -275,7 +270,7 @@ public final class ArmSubsystem extends SwitchableSubsystemBase {
             // Estimate the current velocity of the arm with relation to the new target
             double estVel = (prevMag - magToFinalTarget) / 0.02;
 
-//            movePid.reset(-magToFinalTarget, estVel);
+            //            movePid.reset(-magToFinalTarget, estVel);
             movePid.reset();
             needResetPID = false;
         }
